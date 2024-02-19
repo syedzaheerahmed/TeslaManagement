@@ -11,7 +11,9 @@ public class Classes {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long class_id;
     private String batch_name;
-    private long branch_id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="branch_id", foreignKey = @ForeignKey(name = "fk_branch_id"), referencedColumnName = "branch_id")
+    private Branches branches;
     private String batch_timings;
     private long staff_id;
 }

@@ -3,6 +3,8 @@ package com.example.TeslaManagement.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "branches")
@@ -13,4 +15,6 @@ public class Branches {
     private String branch_name;
     private String branch_address;
     private long hq_id;
+    @OneToMany(mappedBy = "branches")
+    private List<Classes> classes;
 }
