@@ -1,20 +1,44 @@
 package com.example.TeslaManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Entity
 @Table(name = "branches")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Branches {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long branch_id;
-    private String branch_name;
-    private String branch_address;
-    private long hq_id;
-    @OneToMany(mappedBy = "branches")
-    private List<Classes> classes;
+    public long branch_id;
+    public String branch_name;
+    public String branch_address;
+    public long hq_id;
+
+    public Branches() {
+        // Default constructor
+    }
+
+    Branches(long branch_id,String branch_name,String branch_address, long hq_id) {
+        this.branch_id = branch_id;
+        this.branch_address = branch_address;
+        this.branch_name = branch_name;
+        this.hq_id = hq_id;
+    }
+
+    public long getBranch_id() {
+        return branch_id;
+    }
+    public String getBranch_name() {
+        return branch_name;
+    }
+    public String getBranch_address() {
+        return branch_address;
+    }
+    public long getHq_id() {
+        return hq_id;
+    }
+
 }
+
