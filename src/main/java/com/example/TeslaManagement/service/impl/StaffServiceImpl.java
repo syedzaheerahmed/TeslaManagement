@@ -34,7 +34,8 @@ public class StaffServiceImpl implements StaffService {
             System.out.println("Exception Occurred : "+e.getMessage());
             return "Error in updating staff details";
         }
-        return "Staff details updated successfully";    }
+        return "Staff details updated successfully";
+    }
 
     @Override
     public String deleteStaff(Long staff_id) {
