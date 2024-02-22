@@ -39,5 +39,19 @@ public class Classes {
     public long getStaff_id() {
         return staff_id;
     }
-
+    public void setClass_id(long class_id) {
+        this.class_id = class_id;
+    }
+    public void setBatch_name(String batch_name) {
+        this.batch_name = batch_name;
+    }
+    public void setBranch_id(long branch_id) {
+        this.branch_id = branch_id;
+    }
+    public void setBatch_timings(String batch_timings) {
+        this.batch_timings = batch_timings;
+    }
+    public void setStaff_id(long staff_id) {
+        this.staff_id = staff_id;
+    }
 }

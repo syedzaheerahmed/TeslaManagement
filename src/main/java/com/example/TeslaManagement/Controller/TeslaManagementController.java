@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeslaManagementController {
     @GetMapping("/")
     public String getHome(){
-        return "Home";
+        return "HomePage";
     }
 }

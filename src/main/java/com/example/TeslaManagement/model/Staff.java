@@ -34,4 +34,58 @@ public class Staff {
         this.is_active = is_active;
         this.reason_for_deactivation = reason_for_deactivation;
     }
+    public long getStaff_id() {
+        return staff_id;
+    }
+    public void setStaff_id(long staff_id) {
+        this.staff_id = staff_id;
+    }
+    public String getStaff_name() {
+        return staff_name;
+    }
+    public void setStaff_name(String staff_name) {
+        this.staff_name = staff_name;
+    }
+    public long getBranch_id() {
+        return branch_id;
+    }
+    public void setBranch_id(long branch_id) {
+        this.branch_id = branch_id;
+    }
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public String getContact_number() {
+        return contact_number;
+    }
+    public void setContact_number(String contact_number) {
+        this.contact_number = contact_number;
+    }
+    public boolean isIs_teaching_staff() {
+        return is_teaching_staff;
+    }
+    public void setIs_teaching_staff(boolean is_teaching_staff) {
+        this.is_teaching_staff = is_teaching_staff;
+    }
+    public boolean isIs_admin() {
+        return is_admin;
+    }
+    public void setIs_admin(boolean is_admin) {
+        this.is_admin = is_admin;
+    }
+    public boolean isIs_active() {
+        return is_active;
+    }
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
+    }
+    public String getReason_for_deactivation() {
+        return reason_for_deactivation;
+    }
+    public void setReason_for_deactivation(String reason_for_deactivation) {
+        this.reason_for_deactivation = reason_for_deactivation;
+    }
 }
