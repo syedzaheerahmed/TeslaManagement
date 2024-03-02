@@ -1,10 +1,14 @@
 package com.example.TeslaManagement.service.impl;
 
+import com.example.TeslaManagement.model.Roles;
 import com.example.TeslaManagement.model.Staff;
 import com.example.TeslaManagement.repository.StaffRepo;
+import com.example.TeslaManagement.service.RolesService;
 import com.example.TeslaManagement.service.StaffService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.PublicKey;
 import java.util.List;
 
 @Service
@@ -12,17 +16,18 @@ public class StaffServiceImpl implements StaffService {
 
     StaffRepo staffRepo;
     public StaffServiceImpl(StaffRepo staffRepo) {this.staffRepo = staffRepo;}
-
+    @Autowired
+    RolesService rolesService;
     @Override
-    public String createStaff(Staff staff) {
+    public Roles createStaff(Staff staff) {
         try{
-            staffRepo.save(staff);
+            Staff savedStaff = staffRepo.save(staff);
+            return rolesService.createRolesForStaff(savedStaff.getStaff_id(),savedStaff.getRole(),savedStaff.getBranch_id());
         }
         catch (Exception e) {
             System.out.println("Exception Occurred : "+e.getMessage());
-            return "Error in adding staff details";
         }
-        return "Staff details added successfully";
+        return null;
     }
 
     @Override

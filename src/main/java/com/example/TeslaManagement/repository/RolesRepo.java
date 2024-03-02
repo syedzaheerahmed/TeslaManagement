@@ -6,5 +6,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
 public interface RolesRepo extends JpaRepository<Roles,Long> {
+    boolean existsByUsernameAndPassword(String username,String password);
 
+    Roles findByUsername(String username);
 }

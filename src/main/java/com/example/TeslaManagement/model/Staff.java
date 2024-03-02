@@ -13,24 +13,25 @@ public class Staff {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public long staff_id;
     public String staff_name;
-    public long branch_id;
+    public Integer[] branch_id;
     public String address;
     public String contact_number;
     public boolean is_teaching_staff;
-    public boolean is_admin;
+    public String role;
     public boolean is_active;
     public String reason_for_deactivation;
     public Staff() {
         // Default constructor
     }
-    Staff(long staff_id, String staff_name, long branch_id, String address, String contact_number, boolean is_teaching_staff, boolean is_admin, boolean is_active, String reason_for_deactivation) {
+
+    Staff(long staff_id, String staff_name, Integer[] branch_id, String address, String contact_number, boolean is_teaching_staff, String role, boolean is_active, String reason_for_deactivation) {
         this.staff_id = staff_id;
         this.staff_name = staff_name;
         this.branch_id = branch_id;
         this.address = address;
         this.contact_number = contact_number;
         this.is_teaching_staff = is_teaching_staff;
-        this.is_admin = is_admin;
+        this.role = role;
         this.is_active = is_active;
         this.reason_for_deactivation = reason_for_deactivation;
     }
@@ -46,10 +47,10 @@ public class Staff {
     public void setStaff_name(String staff_name) {
         this.staff_name = staff_name;
     }
-    public long getBranch_id() {
+    public Integer[] getBranch_id() {
         return branch_id;
     }
-    public void setBranch_id(long branch_id) {
+    public void setBranch_id(Integer[] branch_id) {
         this.branch_id = branch_id;
     }
     public String getAddress() {
@@ -70,11 +71,11 @@ public class Staff {
     public void setIs_teaching_staff(boolean is_teaching_staff) {
         this.is_teaching_staff = is_teaching_staff;
     }
-    public boolean isIs_admin() {
-        return is_admin;
+    public String getRole() {
+        return role;
     }
-    public void setIs_admin(boolean is_admin) {
-        this.is_admin = is_admin;
+    public void setRole(String role) {
+        this.role = role;
     }
     public boolean isIs_active() {
         return is_active;

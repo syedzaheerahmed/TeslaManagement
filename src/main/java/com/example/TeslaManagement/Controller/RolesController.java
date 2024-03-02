@@ -4,6 +4,9 @@ import com.example.TeslaManagement.model.Roles;
 import com.example.TeslaManagement.service.RolesService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/v1/roles")
@@ -20,6 +23,22 @@ public class RolesController {
         return rolesService.getRoleDetails(user_id);
     }
 
+    @PostMapping("/loginUser")
+    public ResponseEntity<Boolean> loginUser(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
+        boolean credentialsValid = rolesService.checkUserAndPassword(username, password);
+        return ResponseEntity.ok(credentialsValid);
+    }
+
+    @PostMapping("/resetPassword")
+    public ResponseEntity<Boolean> resetPassword(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
+        boolean credentialsValid = rolesService.resetPassword(username, password);
+        return ResponseEntity.ok(credentialsValid);
+    }
+
     //Get all roles
     @GetMapping("/getAllRoleDetails")
     public List<Roles> getAllRolesDetails() {
@@ -28,7 +47,7 @@ public class RolesController {
 
     //Add role
     @PostMapping("/addRoleDetails")
-    public String addRoleDetails(@RequestBody Roles roles) {
+    public Roles addRoleDetails(@RequestBody Roles roles) {
         return rolesService.createRoles(roles);
     }
 

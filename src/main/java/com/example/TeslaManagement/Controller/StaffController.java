@@ -1,5 +1,6 @@
 package com.example.TeslaManagement.Controller;
 
+import com.example.TeslaManagement.model.Roles;
 import com.example.TeslaManagement.model.Staff;
 import com.example.TeslaManagement.service.StaffService;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class StaffController {
 
     //Add staff
     @PostMapping("/addStaffDetails")
-    public String addStaffDetails(@RequestBody Staff staff) {
+    public Roles addStaffDetails(@RequestBody Staff staff) {
         return staffService.createStaff(staff);
     }
 
