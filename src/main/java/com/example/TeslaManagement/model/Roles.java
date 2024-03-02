@@ -14,13 +14,14 @@ public class Roles {
     public long user_id;
     public String username;
     public String password;
-    public long branch_id;
+    public Integer[] branch_id;
     public String role;
     public long staff_id;
     public Roles() {
         //default Constructor
     }
-    Roles(long user_id, String username, String password, long branch_id, String role, long staff_id) {
+
+    Roles(long user_id, String username, String password, Integer[] branch_id, String role, long staff_id) {
         this.user_id = user_id;
         this.username = username;
         this.password = password;
@@ -46,10 +47,10 @@ public class Roles {
     public void setPassword(String password) {
         this.password = password;
     }
-    public long getBranch_id() {
+    public Integer[] getBranch_id() {
         return branch_id;
     }
-    public void setBranch_id(long branch_id) {
+    public void setBranch_id(Integer[] branch_id) {
         this.branch_id = branch_id;
     }
     public String getRole() {
