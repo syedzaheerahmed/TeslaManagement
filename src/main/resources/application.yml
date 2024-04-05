@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/tesla_management
-    username: spydaa_admin
-    password: admin
+    username: postgres
+    password: 2456
   jpa:
     hibernate:
       ddl-auto: update

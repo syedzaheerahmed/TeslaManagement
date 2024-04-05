@@ -94,9 +94,9 @@ public class RolesServiceImpl implements RolesService {
         int year = Year.now().getValue();
         String username = "";
         if(role.equals("admin")) {
-            username += "ST" + Integer.toString(year) + Long.toString(staff_id);
+            username += "ST" + year + staff_id;
         }else if(role.equals("superadmin")) {
-            username += "SA" + Integer.toString(year) + Long.toString(staff_id);
+            username += "SA" + year + staff_id;
         }
         return username;
     }

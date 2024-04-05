@@ -4,9 +4,9 @@ import com.example.TeslaManagement.model.StudentAttendance;
 import java.util.List;
 
 public interface StudentAttendanceService {
-    public String createStudentAttendance(StudentAttendance studentAttendance);
-    public String updateStudentAttendance(StudentAttendance studentAttendance);
-    public String deleteStudentAttendance(Long student_attendance_id);
-    public StudentAttendance getStudentAttendanceDetails(Long student_attendance_id);
-    public List<StudentAttendance> getAllStudentAttendance();
+    String createStudentAttendance(StudentAttendance studentAttendance);
+    String updateStudentAttendance(StudentAttendance studentAttendance);
+    String deleteStudentAttendance(Long student_attendance_id);
+    StudentAttendance getStudentAttendanceDetails(Long student_attendance_id);
+    List<StudentAttendance> getAllStudentAttendance();
 }
