@@ -30,8 +30,11 @@ public class Student {
     public Date created_at = new Date();
     public Date updated_at = new Date();
     public String created_by;
+    @ManyToOne
+    @JoinColumn(name = "branch_id", referencedColumnName = "branch_id")
+    private Branches branch_id;
 
-    Student(long student_id, String student_name, Integer batch_year, String gender, Date dob, String school_name, String school_std, String board_of_school, String extra_details, String parent_name, String parent_contact, String student_address, Boolean is_approved, Boolean is_active, String reason_for_deactivation, Date created_at, Date updated_at, String created_by) {
+    Student(long student_id, String student_name, Integer batch_year, String gender, Date dob, String school_name, String school_std, String board_of_school, String extra_details, String parent_name, String parent_contact, String student_address, Boolean is_approved, Boolean is_active, String reason_for_deactivation, Date created_at, Date updated_at, String created_by, Branches branch_id) {
         this.student_id = student_id;
         this.student_name = student_name;
         this.batch_year = batch_year;
@@ -50,7 +53,9 @@ public class Student {
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.created_by = created_by;
+        this.branch_id=branch_id;
     }
+
     public Student() {
     }
     public long getStudent_id() {
@@ -160,5 +165,12 @@ public class Student {
     }
     public void setCreated_by(String created_by) {
         this.created_by = created_by;
+    }
+    public Branches getBranch_id() {
+        return branch_id;
+    }
+
+    public void setBranch_id(Branches branch_id) {
+        this.branch_id = branch_id;
     }
 }

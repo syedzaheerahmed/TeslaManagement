@@ -1,31 +1,29 @@
 package com.example.TeslaManagement.model;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Data
 @Entity
+@Data
 @Table(name = "accounts")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Accounts {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "accounts_id")
+    @Column(name = "account_id")
     private Long accountId;
 
     @Column(name = "mode")
     private String mode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "branch_id", referencedColumnName = "branch_id")
     private Branches branch;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "student_id")
     private Student student;
 
@@ -41,11 +39,28 @@ public class Accounts {
     @Column(name = "payment_mode")
     private String paymentMode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "received_by", referencedColumnName = "user_id")
     private Roles receivedBy;
 
+    @Column(name = "comments")
     private String comments;
+
+    public Accounts() {
+    }
+
+    public Accounts(Long accountId, String mode, Branches branch, Student student, Date date, String incomeType, BigDecimal incomeAmount, String paymentMode, Roles receivedBy, String comments) {
+        this.accountId = accountId;
+        this.mode = mode;
+        this.branch = branch;
+        this.student = student;
+        this.date = date;
+        this.incomeType = incomeType;
+        this.incomeAmount = incomeAmount;
+        this.paymentMode = paymentMode;
+        this.receivedBy = receivedBy;
+        this.comments = comments;
+    }
 
     public Long getAccountId() {
         return accountId;
@@ -73,22 +88,6 @@ public class Accounts {
 
     public Student getStudent() {
         return student;
-    }
-
-    public Accounts() {
-    }
-
-    public Accounts(Long accountId, String mode, Branches branch, Student student, Date date, String incomeType, BigDecimal incomeAmount, String paymentMode, Roles receivedBy, String comments) {
-        this.accountId = accountId;
-        this.mode = mode;
-        this.branch = branch;
-        this.student = student;
-        this.date = date;
-        this.incomeType = incomeType;
-        this.incomeAmount = incomeAmount;
-        this.paymentMode = paymentMode;
-        this.receivedBy = receivedBy;
-        this.comments = comments;
     }
 
     public void setStudent(Student student) {
