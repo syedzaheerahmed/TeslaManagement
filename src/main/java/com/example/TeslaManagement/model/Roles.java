@@ -11,7 +11,7 @@ import lombok.Data;
 public class Roles {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    public long user_id;
+    public long role_id;
     public String username;
     public String password;
     public Integer[] branch_id;
@@ -21,19 +21,19 @@ public class Roles {
         //default Constructor
     }
 
-    Roles(long user_id, String username, String password, Integer[] branch_id, String role, long staff_id) {
-        this.user_id = user_id;
+    Roles(long role_id, String username, String password, Integer[] branch_id, String role, long staff_id) {
+        this.role_id = role_id;
         this.username = username;
         this.password = password;
         this.branch_id = branch_id;
         this.role = role;
         this.staff_id = staff_id;
     }
-    public long getUser_id() {
-        return user_id;
+    public long getRole_id() {
+        return role_id;
     }
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
+    public void setRole_id(long user_id) {
+        this.role_id = user_id;
     }
     public String getUsername() {
         return username;
