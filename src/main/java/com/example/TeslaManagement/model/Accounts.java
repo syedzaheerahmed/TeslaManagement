@@ -2,12 +2,14 @@ package com.example.TeslaManagement.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
-@Entity
 @Data
+@Entity
 @Table(name = "accounts")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Accounts {
@@ -16,51 +18,29 @@ public class Accounts {
     @Column(name = "account_id")
     private Long accountId;
 
-    @Column(name = "mode")
-    private String mode;
-
     @ManyToOne
-    @JoinColumn(name = "branch_id", referencedColumnName = "branch_id")
-    private Branches branch;
+    @JoinColumn(name = "transaction_id", referencedColumnName = "transaction_id")
+    private Transactions transaction;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "student_id")
-    private Student student;
-
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private Date date;
 
-    @Column(name = "income_type")
-    private String incomeType;
-
-    @Column(name = "income_amount")
-    private BigDecimal incomeAmount;
-
-    @Column(name = "payment_mode")
-    private String paymentMode;
-
     @ManyToOne
-    @JoinColumn(name = "received_by", referencedColumnName = "user_id")
-    private Roles receivedBy;
+    @JoinColumn(name = "received_by", referencedColumnName = "id")
+    private UserDetails receivedBy;
 
     @Column(name = "comments")
     private String comments;
 
-    public Accounts() {
-    }
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    public Accounts(Long accountId, String mode, Branches branch, Student student, Date date, String incomeType, BigDecimal incomeAmount, String paymentMode, Roles receivedBy, String comments) {
-        this.accountId = accountId;
-        this.mode = mode;
-        this.branch = branch;
-        this.student = student;
-        this.date = date;
-        this.incomeType = incomeType;
-        this.incomeAmount = incomeAmount;
-        this.paymentMode = paymentMode;
-        this.receivedBy = receivedBy;
-        this.comments = comments;
-    }
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @Column(name = "is_delete", nullable = false)
+    private boolean isDelete = false;
 
     public Long getAccountId() {
         return accountId;
@@ -70,28 +50,12 @@ public class Accounts {
         this.accountId = accountId;
     }
 
-    public String getMode() {
-        return mode;
+    public Transactions getTransaction() {
+        return transaction;
     }
 
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
-
-    public Branches getBranch() {
-        return branch;
-    }
-
-    public void setBranch(Branches branch) {
-        this.branch = branch;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setTransaction(Transactions transaction) {
+        this.transaction = transaction;
     }
 
     public Date getDate() {
@@ -102,35 +66,11 @@ public class Accounts {
         this.date = date;
     }
 
-    public String getIncomeType() {
-        return incomeType;
-    }
-
-    public void setIncomeType(String incomeType) {
-        this.incomeType = incomeType;
-    }
-
-    public BigDecimal getIncomeAmount() {
-        return incomeAmount;
-    }
-
-    public void setIncomeAmount(BigDecimal incomeAmount) {
-        this.incomeAmount = incomeAmount;
-    }
-
-    public String getPaymentMode() {
-        return paymentMode;
-    }
-
-    public void setPaymentMode(String paymentMode) {
-        this.paymentMode = paymentMode;
-    }
-
-    public Roles getReceivedBy() {
+    public UserDetails getReceivedBy() {
         return receivedBy;
     }
 
-    public void setReceivedBy(Roles receivedBy) {
+    public void setReceivedBy(UserDetails receivedBy) {
         this.receivedBy = receivedBy;
     }
 
@@ -140,5 +80,40 @@ public class Accounts {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
+    }
+
+    public Accounts(Long accountId, Transactions transaction, Date date, UserDetails receivedBy, String comments, LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDelete) {
+        this.accountId = accountId;
+        this.transaction = transaction;
+        this.date = date;
+        this.receivedBy = receivedBy;
+        this.comments = comments;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.isDelete = isDelete;
     }
 }

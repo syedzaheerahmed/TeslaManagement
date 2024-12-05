@@ -26,6 +26,7 @@ public class Student {
     public String student_address;
     public Boolean is_approved = false;
     public Boolean is_active = true;
+    public Boolean is_fees_paid ;
     public String reason_for_deactivation;
     public Date created_at = new Date();
     public Date updated_at = new Date();
@@ -34,26 +35,27 @@ public class Student {
     @JoinColumn(name = "branch_id", referencedColumnName = "branch_id")
     private Branches branch_id;
 
-    Student(long student_id, String student_name, Integer batch_year, String gender, Date dob, String school_name, String school_std, String board_of_school, String extra_details, String parent_name, String parent_contact, String student_address, Boolean is_approved, Boolean is_active, String reason_for_deactivation, Date created_at, Date updated_at, String created_by, Branches branch_id) {
+    public Student(long student_id, Integer batch_year, String student_name, String gender, Date dob, String school_name, String school_std, String board_of_school, String parent_name, String extra_details, String parent_contact, Boolean is_approved, String student_address, Boolean is_active, Boolean is_fees_paid, String reason_for_deactivation, Date created_at, Date updated_at, String created_by, Branches branch_id) {
         this.student_id = student_id;
-        this.student_name = student_name;
         this.batch_year = batch_year;
+        this.student_name = student_name;
         this.gender = gender;
         this.dob = dob;
         this.school_name = school_name;
         this.school_std = school_std;
         this.board_of_school = board_of_school;
-        this.extra_details = extra_details;
         this.parent_name = parent_name;
+        this.extra_details = extra_details;
         this.parent_contact = parent_contact;
-        this.student_address = student_address;
         this.is_approved = is_approved;
+        this.student_address = student_address;
         this.is_active = is_active;
+        this.is_fees_paid = is_fees_paid;
         this.reason_for_deactivation = reason_for_deactivation;
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.created_by = created_by;
-        this.branch_id=branch_id;
+        this.branch_id = branch_id;
     }
 
     public Student() {
@@ -172,5 +174,13 @@ public class Student {
 
     public void setBranch_id(Branches branch_id) {
         this.branch_id = branch_id;
+    }
+
+    public Boolean getIs_fees_paid() {
+        return is_fees_paid;
+    }
+
+    public void setIs_fees_paid(Boolean is_fees_paid) {
+        this.is_fees_paid = is_fees_paid;
     }
 }
