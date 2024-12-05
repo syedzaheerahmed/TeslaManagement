@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -61,8 +62,12 @@ public class Transactions {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public Transactions() {
+    }
 
     public Transactions(String transactionType, String category, Long transactionId, String paymentMode, BigDecimal amount, Date transactionDate, boolean isInvalidTransaction, String comments, Branches branch, Staff staff, Student student, UserDetails receivedBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.transactionType = transactionType;

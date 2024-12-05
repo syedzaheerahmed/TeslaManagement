@@ -1,6 +1,7 @@
 package com.example.TeslaManagement.Controller;
 
 import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
+import com.example.TeslaManagement.DTO.TransactionAccountRequestDTO;
 import com.example.TeslaManagement.model.Transactions;
 import com.example.TeslaManagement.service.TransactionsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/api/v1/transactions")
 public class TransactionsController {
 
     private final TransactionsService transactionsService;
@@ -83,6 +84,18 @@ public class TransactionsController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error deleting transaction: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/create-transaction-account")
+    public ResponseEntity<?> createTransaction(
+            @RequestBody TransactionAccountRequestDTO requestDTO) {
+        try {
+            Transactions savedTransaction = transactionsService.createTransactionWithAccount(requestDTO);
+            return new ResponseEntity<>(savedTransaction, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creating transaction: " + e.getMessage());
         }
     }
 }

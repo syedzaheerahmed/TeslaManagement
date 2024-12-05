@@ -1,5 +1,6 @@
 package com.example.TeslaManagement.service;
 
+import com.example.TeslaManagement.DTO.TransactionAccountRequestDTO;
 import com.example.TeslaManagement.model.Transactions;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface TransactionsService {
     Transactions updateTransaction(Long id, Transactions transaction);
 
     void deleteTransaction(Long id);
+
+    Transactions createTransactionWithAccount( TransactionAccountRequestDTO transactions);
 }

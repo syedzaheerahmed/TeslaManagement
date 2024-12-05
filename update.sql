@@ -18,3 +18,11 @@ alter table if exists transactions add constraint FK15k7r8ev1bpkrbslfrbp7q32t fo
 alter table if exists transactions add constraint FKfner4cly0tqxmdut6udfxcb2b foreign key (staff_id) references staff;
 alter table if exists transactions add constraint FK8klpun9u3aoqpyaaxjk36j1bd foreign key (student_id) references student;
 alter table if exists staff add column is_salary_paid boolean not null;
+create table accounts (account_id bigint not null, comments varchar(255), created_at timestamp(6) not null, date timestamp(6) not null, is_delete boolean not null, updated_at timestamp(6) not null, received_by bigint, transaction_id bigint, primary key (account_id));
+alter table if exists accounts add constraint FKlsy3ac8vc53y9u2we16xbev23 foreign key (received_by) references user_detail;
+alter table if exists accounts add constraint FKij6okg1qcxqhd4jy7wcu2awup foreign key (transaction_id) references transactions;
+create table accounts (account_id bigint not null, comments varchar(255), created_at timestamp(6) not null, date timestamp(6) not null, is_delete boolean not null, updated_at timestamp(6) not null, received_by bigint, transaction_id bigint, primary key (account_id));
+alter table if exists accounts drop constraint if exists UK_jdncyo1sl92qj7ldiedh33xte;
+alter table if exists accounts add constraint UK_jdncyo1sl92qj7ldiedh33xte unique (transaction_id);
+alter table if exists accounts add constraint FKlsy3ac8vc53y9u2we16xbev23 foreign key (received_by) references user_detail;
+alter table if exists accounts add constraint FKij6okg1qcxqhd4jy7wcu2awup foreign key (transaction_id) references transactions;

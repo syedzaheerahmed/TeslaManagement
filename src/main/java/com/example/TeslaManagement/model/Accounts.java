@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class Accounts {
     @Column(name = "account_id")
     private Long accountId;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "transaction_id", referencedColumnName = "transaction_id")
     private Transactions transaction;
 
@@ -36,6 +37,7 @@ public class Accounts {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
@@ -115,5 +117,8 @@ public class Accounts {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isDelete = isDelete;
+    }
+
+    public Accounts() {
     }
 }
