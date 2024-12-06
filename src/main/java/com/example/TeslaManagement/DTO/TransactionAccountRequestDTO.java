@@ -34,11 +34,11 @@ public class TransactionAccountRequestDTO {
     private Long staffId;
     private Long studentId;
 
-    @NotNull(message = "Received By ID is required")
-    private Long receivedById;
+    @NotNull(message = "Transaction By ID is required")
+    private Long transactionMadeBy;
 
 
-    public TransactionAccountRequestDTO(String transactionType, String category, BigDecimal amount, String paymentMode, Date transactionDate, String transactionComments, String accountComments, Long staffId, Long branchId, Long studentId, Long receivedById) {
+    public TransactionAccountRequestDTO(String transactionType, String category, BigDecimal amount, String paymentMode, Date transactionDate, String transactionComments, String accountComments, Long staffId, Long branchId, Long studentId, Long transactionMadeBy) {
         this.transactionType = transactionType;
         this.category = category;
         this.amount = amount;
@@ -49,7 +49,7 @@ public class TransactionAccountRequestDTO {
         this.staffId = staffId;
         this.branchId = branchId;
         this.studentId = studentId;
-        this.receivedById = receivedById;
+        this.transactionMadeBy = transactionMadeBy;
     }
 
     public String getTransactionType() {
@@ -132,11 +132,11 @@ public class TransactionAccountRequestDTO {
         this.studentId = studentId;
     }
 
-    public Long getReceivedById() {
-        return receivedById;
+    public Long getTransactionMadeBy() {
+        return transactionMadeBy;
     }
 
-    public void setReceivedById(Long receivedById) {
-        this.receivedById = receivedById;
+    public void setTransactionMadeBy(Long transactionMadeBy) {
+        this.transactionMadeBy = transactionMadeBy;
     }
 }

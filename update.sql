@@ -26,3 +26,17 @@ alter table if exists accounts drop constraint if exists UK_jdncyo1sl92qj7ldiedh
 alter table if exists accounts add constraint UK_jdncyo1sl92qj7ldiedh33xte unique (transaction_id);
 alter table if exists accounts add constraint FKlsy3ac8vc53y9u2we16xbev23 foreign key (received_by) references user_detail;
 alter table if exists accounts add constraint FKij6okg1qcxqhd4jy7wcu2awup foreign key (transaction_id) references transactions;
+alter table if exists transactions add column transaction_made_by bigint;
+alter table if exists transactions add constraint FKo7r6iva6ty7xviol1cpvlmuah foreign key (transaction_made_by) references user_detail;
+create table accounts (account_id bigint not null, comments varchar(255), created_at timestamp(6) not null, date timestamp(6) not null, is_delete boolean not null, updated_at timestamp(6) not null, received_by bigint, transaction_id bigint, primary key (account_id));
+create table transactions (transaction_id bigint not null, amount numeric(38,2) not null, category varchar(255) not null, comments varchar(255), created_at timestamp(6) not null, is_invalid boolean not null, payment_mode varchar(255) not null, date timestamp(6) not null, transaction_type varchar(255) not null, updated_at timestamp(6) not null, branch_id bigint, staff_id bigint, student_id bigint, transaction_made_by bigint, primary key (transaction_id));
+alter table if exists accounts drop constraint if exists UK_jdncyo1sl92qj7ldiedh33xte;
+alter table if exists accounts add constraint UK_jdncyo1sl92qj7ldiedh33xte unique (transaction_id);
+alter table if exists accounts add constraint FKlsy3ac8vc53y9u2we16xbev23 foreign key (received_by) references user_detail;
+alter table if exists accounts add constraint FKij6okg1qcxqhd4jy7wcu2awup foreign key (transaction_id) references transactions;
+alter table if exists transactions add constraint FKti961feu1yn980b0kebj16cxh foreign key (branch_id) references branches;
+alter table if exists transactions add constraint FKfner4cly0tqxmdut6udfxcb2b foreign key (staff_id) references staff;
+alter table if exists transactions add constraint FK8klpun9u3aoqpyaaxjk36j1bd foreign key (student_id) references student;
+alter table if exists transactions add constraint FKo7r6iva6ty7xviol1cpvlmuah foreign key (transaction_made_by) references user_detail;
+alter table if exists accounts add column transaction_made_by bigint;
+alter table if exists accounts add constraint FK9d8ahaf7on6h38vvk4qpkynd5 foreign key (transaction_made_by) references user_detail;

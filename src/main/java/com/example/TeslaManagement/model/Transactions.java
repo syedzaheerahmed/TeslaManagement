@@ -55,8 +55,8 @@ public class Transactions {
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "received_by", referencedColumnName = "id")
-    private UserDetails receivedBy;
+    @JoinColumn(name = "transaction_made_by", referencedColumnName = "id")
+    private UserDetails transactionMadeBy;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -69,7 +69,7 @@ public class Transactions {
     public Transactions() {
     }
 
-    public Transactions(String transactionType, String category, Long transactionId, String paymentMode, BigDecimal amount, Date transactionDate, boolean isInvalidTransaction, String comments, Branches branch, Staff staff, Student student, UserDetails receivedBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Transactions(String transactionType, String category, Long transactionId, String paymentMode, BigDecimal amount, Date transactionDate, boolean isInvalidTransaction, String comments, Branches branch, Staff staff, Student student, UserDetails transactionMadeBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.transactionType = transactionType;
         this.category = category;
         this.transactionId = transactionId;
@@ -81,7 +81,7 @@ public class Transactions {
         this.branch = branch;
         this.staff = staff;
         this.student = student;
-        this.receivedBy = receivedBy;
+        this.transactionMadeBy = transactionMadeBy;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -174,12 +174,12 @@ public class Transactions {
         this.staff = staff;
     }
 
-    public UserDetails getReceivedBy() {
-        return receivedBy;
+    public UserDetails getTransactionMadeBy() {
+        return transactionMadeBy;
     }
 
-    public void setReceivedBy(UserDetails receivedBy) {
-        this.receivedBy = receivedBy;
+    public void setTransactionMadeBy(UserDetails transactionMadeBy) {
+        this.transactionMadeBy = transactionMadeBy;
     }
 
     public LocalDateTime getUpdatedAt() {

@@ -68,7 +68,7 @@ public class TransactionsServiceImpl implements TransactionsService {
         existingTransaction.setBranch(transaction.getBranch());
         existingTransaction.setStaff(transaction.getStaff());
         existingTransaction.setStudent(transaction.getStudent());
-        existingTransaction.setReceivedBy(transaction.getReceivedBy());
+        existingTransaction.setTransactionMadeBy(transaction.getTransactionMadeBy());
         return transactionsRepository.save(existingTransaction);
     }
 
@@ -86,7 +86,7 @@ public class TransactionsServiceImpl implements TransactionsService {
         Branches branch = branchRepository.findById(requestDTO.getBranchId())
                 .orElseThrow(() -> new ReferenceNotFoundException("Branch not found"));
 
-        UserDetails receivedBy = userDetailsRepository.findById(requestDTO.getReceivedById())
+        UserDetails receivedBy = userDetailsRepository.findById(requestDTO.getTransactionMadeBy())
                 .orElseThrow(() -> new ReferenceNotFoundException("User not found"));
 
         Staff staff = null;
@@ -113,7 +113,7 @@ public class TransactionsServiceImpl implements TransactionsService {
         transaction.setTransactionDate(requestDTO.getTransactionDate());
         transaction.setComments(requestDTO.getTransactionComments());
         transaction.setBranch(branch);
-        transaction.setReceivedBy(receivedBy);
+        transaction.setTransactionMadeBy(receivedBy);
 
         // Set associated entities
         if (staff != null) transaction.setStaff(staff);
@@ -127,7 +127,7 @@ public class TransactionsServiceImpl implements TransactionsService {
         Accounts account = new Accounts();
         account.setTransaction(savedTransaction);
         account.setDate(requestDTO.getTransactionDate());
-        account.setReceivedBy(transaction.getReceivedBy());
+        account.setReceivedBy(transaction.getTransactionMadeBy());
         account.setComments(requestDTO.getAccountComments());
 
         // Save Account

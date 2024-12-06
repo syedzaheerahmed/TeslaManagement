@@ -27,8 +27,8 @@ public class Accounts {
     private Date date;
 
     @ManyToOne
-    @JoinColumn(name = "received_by", referencedColumnName = "id")
-    private UserDetails receivedBy;
+    @JoinColumn(name = "transaction_made_by", referencedColumnName = "id")
+    private UserDetails transactionMadeBy;
 
     @Column(name = "comments")
     private String comments;
@@ -69,11 +69,11 @@ public class Accounts {
     }
 
     public UserDetails getReceivedBy() {
-        return receivedBy;
+        return transactionMadeBy;
     }
 
     public void setReceivedBy(UserDetails receivedBy) {
-        this.receivedBy = receivedBy;
+        this.transactionMadeBy = receivedBy;
     }
 
     public String getComments() {
@@ -112,7 +112,7 @@ public class Accounts {
         this.accountId = accountId;
         this.transaction = transaction;
         this.date = date;
-        this.receivedBy = receivedBy;
+        this.transactionMadeBy = receivedBy;
         this.comments = comments;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
