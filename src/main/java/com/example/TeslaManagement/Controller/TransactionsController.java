@@ -2,8 +2,10 @@ package com.example.TeslaManagement.Controller;
 
 import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
 import com.example.TeslaManagement.DTO.TransactionAccountRequestDTO;
+import com.example.TeslaManagement.DTO.TransactionListingDTO;
 import com.example.TeslaManagement.DTO.TransactionReportDTO;
 import com.example.TeslaManagement.model.Transactions;
+import com.example.TeslaManagement.service.TransactionListingService;
 import com.example.TeslaManagement.service.TransactionReportService;
 import com.example.TeslaManagement.service.TransactionsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class TransactionsController {
 
     @Autowired
     private TransactionReportService transactionReportService;
+
+    @Autowired
+    private TransactionListingService transactionListingService;
 
     @Autowired
     public TransactionsController(TransactionsService transactionsService) {
@@ -118,6 +123,13 @@ public class TransactionsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creating transaction: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/view-transaction")
+    public ResponseEntity<List<TransactionListingDTO>> getTransactionsList(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fromDate) {
+        List<TransactionListingDTO> transactions = transactionListingService.getTransactionsList(fromDate);
+        return ResponseEntity.ok(transactions);
     }
 }
 
