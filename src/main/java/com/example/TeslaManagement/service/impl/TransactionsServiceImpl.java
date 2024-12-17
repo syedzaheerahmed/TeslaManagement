@@ -73,9 +73,17 @@ public class TransactionsServiceImpl implements TransactionsService {
     }
 
     @Override
-    public void deleteTransaction(Long id) {
+    public Transactions updateTransactionInValid(Long transactionId){
+        Transactions existingTransaction = getTransactionById(transactionId);
+        existingTransaction.setInvalidTransaction(true);
+        return transactionsRepository.save(existingTransaction);
+    }
+
+    @Override
+    public Transactions deleteTransaction(Long id) {
         Transactions transaction = getTransactionById(id);
-        transactionsRepository.delete(transaction);
+        transaction.setDelete(true);
+        return transactionsRepository.save(transaction);
     }
 
     @Transactional
@@ -101,8 +109,6 @@ public class TransactionsServiceImpl implements TransactionsService {
             student = studentRepository.findById(requestDTO.getStudentId())
                     .orElseThrow(() -> new ReferenceNotFoundException("Student not found"));
         }
-
-
 
         // Create Transaction
         Transactions transaction = new Transactions();

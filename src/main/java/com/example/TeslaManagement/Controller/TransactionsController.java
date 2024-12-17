@@ -36,7 +36,7 @@ public class TransactionsController {
     }
 
 
-    @PostMapping
+    @PostMapping("/transaction/new")
     public ResponseEntity<?> createTransaction(@RequestBody Transactions transaction) {
         try {
             Transactions savedTransaction = transactionsService.createTransaction(transaction);
@@ -47,7 +47,7 @@ public class TransactionsController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/transaction/{id}")
     public ResponseEntity<?> getTransactionById(@PathVariable Long id) {
         try {
             Transactions transaction = transactionsService.getTransactionById(id);
@@ -61,7 +61,7 @@ public class TransactionsController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/transaction")
     public ResponseEntity<?> getAllTransactions() {
         try {
             List<Transactions> transactions = transactionsService.getAllTransactions();
@@ -72,7 +72,7 @@ public class TransactionsController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/transaction/{id}")
     public ResponseEntity<?> updateTransaction(
             @PathVariable Long id, @RequestBody Transactions transaction) {
         try {
@@ -87,11 +87,14 @@ public class TransactionsController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("soft-delete/{id}")
     public ResponseEntity<?> deleteTransaction(@PathVariable Long id) {
         try {
-            transactionsService.deleteTransaction(id);
-            return ResponseEntity.noContent().build();
+            if(id == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Given id is null");
+            }
+            Transactions savedTransaction = transactionsService.deleteTransaction(id);
+            return ResponseEntity.ok(savedTransaction);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Transaction not found with ID: " + id);
@@ -130,6 +133,21 @@ public class TransactionsController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fromDate) {
         List<TransactionListingDTO> transactions = transactionListingService.getTransactionsList(fromDate);
         return ResponseEntity.ok(transactions);
+    }
+
+    @PutMapping("/transaction/{transactionId}/deficit")
+    public ResponseEntity<?> changeTransactionId(
+            @PathVariable Long transactionId) {
+        try {
+            Transactions updatedTransaction = transactionsService.updateTransactionInValid(transactionId);
+            return ResponseEntity.ok(updatedTransaction);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Transaction not found with ID: " + transactionId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating transaction: " + e.getMessage());
+        }
     }
 }
 

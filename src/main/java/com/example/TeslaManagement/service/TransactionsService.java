@@ -15,7 +15,9 @@ public interface TransactionsService {
 
     Transactions updateTransaction(Long id, Transactions transaction);
 
-    void deleteTransaction(Long id);
+    Transactions updateTransactionInValid(Long transactionId);
+
+    Transactions deleteTransaction(Long id);
 
     Transactions createTransactionWithAccount( TransactionAccountRequestDTO transactions);
 }

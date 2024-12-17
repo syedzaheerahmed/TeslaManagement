@@ -35,6 +35,9 @@ public class Transactions {
     @Column(name = "is_invalid", nullable = false)
     private boolean isInvalidTransaction;
 
+    @Column(name = "is_delete", nullable = false)
+    private boolean isDelete;
+
     @Column(name = "date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date transactionDate;
@@ -69,15 +72,16 @@ public class Transactions {
     public Transactions() {
     }
 
-    public Transactions(String transactionType, String category, Long transactionId, String paymentMode, BigDecimal amount, Date transactionDate, boolean isInvalidTransaction, String comments, Branches branch, Staff staff, Student student, UserDetails transactionMadeBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.transactionType = transactionType;
-        this.category = category;
+    public Transactions(Long transactionId, String category, String transactionType, String paymentMode, BigDecimal amount, boolean isInvalidTransaction, boolean isDelete, String comments, Date transactionDate, Branches branch, Staff staff, Student student, UserDetails transactionMadeBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.transactionId = transactionId;
+        this.category = category;
+        this.transactionType = transactionType;
         this.paymentMode = paymentMode;
         this.amount = amount;
-        this.transactionDate = transactionDate;
         this.isInvalidTransaction = isInvalidTransaction;
+        this.isDelete = isDelete;
         this.comments = comments;
+        this.transactionDate = transactionDate;
         this.branch = branch;
         this.staff = staff;
         this.student = student;
@@ -196,5 +200,13 @@ public class Transactions {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(boolean delete) {
+        isDelete = delete;
     }
 }
