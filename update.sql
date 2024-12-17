@@ -40,3 +40,6 @@ alter table if exists transactions add constraint FK8klpun9u3aoqpyaaxjk36j1bd fo
 alter table if exists transactions add constraint FKo7r6iva6ty7xviol1cpvlmuah foreign key (transaction_made_by) references user_detail;
 alter table if exists accounts add column transaction_made_by bigint;
 alter table if exists accounts add constraint FK9d8ahaf7on6h38vvk4qpkynd5 foreign key (transaction_made_by) references user_detail;
+alter table if exists transactions add column is_delete boolean not null;
+alter table if exists transactions add column is_delete boolean not null;
+alter table if exists transactions add column is_delete BOOLEAN DEFAULT FALSE not null;

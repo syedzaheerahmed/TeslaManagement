@@ -35,7 +35,7 @@ public class Transactions {
     @Column(name = "is_invalid", nullable = false)
     private boolean isInvalidTransaction;
 
-    @Column(name = "is_delete", nullable = false)
+    @Column(name = "is_delete", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean isDelete;
 
     @Column(name = "date", nullable = false)
