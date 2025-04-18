@@ -1,0 +1,51 @@
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    secrets:
+      - db-password
+      - jwt-secret
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/tesla_management
+      - DB_USERNAME=postgres
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    entrypoint: ["/bin/sh", "-c", "export DB_PASSWORD=$(cat /run/secrets/db-password) && java -Dspring.profiles.active=postgres org.springframework.boot.loader.launch.JarLauncher"]
+  db:
+    image: postgres:15
+    restart: always
+    user: postgres
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tesla_management
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+volumes:
+  db-data:
+secrets:
+  db-password:
+    file: db/password.txt
+  jwt-secret:
+    file: jwt/secret.txt
