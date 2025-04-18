@@ -59,7 +59,7 @@ public class Transactions {
 
     @ManyToOne
     @JoinColumn(name = "transaction_made_by", referencedColumnName = "id")
-    private UserDetails transactionMadeBy;
+    private UserInfo transactionMadeBy;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -72,7 +72,7 @@ public class Transactions {
     public Transactions() {
     }
 
-    public Transactions(Long transactionId, String category, String transactionType, String paymentMode, BigDecimal amount, boolean isInvalidTransaction, boolean isDelete, String comments, Date transactionDate, Branches branch, Staff staff, Student student, UserDetails transactionMadeBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Transactions(Long transactionId, String category, String transactionType, String paymentMode, BigDecimal amount, boolean isInvalidTransaction, boolean isDelete, String comments, Date transactionDate, Branches branch, Staff staff, Student student, UserInfo transactionMadeBy, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.transactionId = transactionId;
         this.category = category;
         this.transactionType = transactionType;
@@ -178,11 +178,11 @@ public class Transactions {
         this.staff = staff;
     }
 
-    public UserDetails getTransactionMadeBy() {
+    public UserInfo getTransactionMadeBy() {
         return transactionMadeBy;
     }
 
-    public void setTransactionMadeBy(UserDetails transactionMadeBy) {
+    public void setTransactionMadeBy(UserInfo transactionMadeBy) {
         this.transactionMadeBy = transactionMadeBy;
     }
 

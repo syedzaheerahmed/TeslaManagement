@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TransactionReportServiceImpl implements TransactionReportService {
@@ -64,6 +61,10 @@ public class TransactionReportServiceImpl implements TransactionReportService {
         detailDTO.setTransactionDate(transaction.getTransactionDate());
         detailDTO.setPaymentMode(transaction.getPaymentMode());
         detailDTO.setComments(transaction.getComments());
+
+        //TransactionReportDTO.builder().debitTransactions(5).build(); builder example
+
+        Objects.nonNull(transaction.getBranch()); // not null example
 
         // Set optional related entities
         if (transaction.getBranch() != null) {

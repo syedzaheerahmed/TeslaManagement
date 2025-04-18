@@ -32,7 +32,7 @@ public class TransactionsServiceImpl implements TransactionsService {
     private StudentRepo studentRepository;
 
     @Autowired
-    private UserDetailsRepo userDetailsRepository;
+    private UserInfoRepo userInfoRepository;
 
     @Autowired
     public TransactionsServiceImpl(TransactionsRepo transactionsRepository) {
@@ -94,7 +94,7 @@ public class TransactionsServiceImpl implements TransactionsService {
         Branches branch = branchRepository.findById(requestDTO.getBranchId())
                 .orElseThrow(() -> new ReferenceNotFoundException("Branch not found"));
 
-        UserDetails receivedBy = userDetailsRepository.findById(requestDTO.getTransactionMadeBy())
+        UserInfo receivedBy = userInfoRepository.findById(requestDTO.getTransactionMadeBy())
                 .orElseThrow(() -> new ReferenceNotFoundException("User not found"));
 
         Staff staff = null;

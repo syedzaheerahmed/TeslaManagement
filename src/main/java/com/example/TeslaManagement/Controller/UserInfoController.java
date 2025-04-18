@@ -1,7 +1,7 @@
 package com.example.TeslaManagement.Controller;
 
-import com.example.TeslaManagement.model.UserDetails;
-import com.example.TeslaManagement.service.UserDetailsService;
+import com.example.TeslaManagement.model.UserInfo;
+import com.example.TeslaManagement.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,38 +11,38 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/users")
-public class UserDetailsController {
+public class UserInfoController {
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserInfoService userInfoService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDetails> createUser(@RequestBody UserDetails userDetail) {
-        UserDetails createdUser = userDetailsService.createUser(userDetail);
+    public ResponseEntity<UserInfo> createUser(@RequestBody UserInfo userDetail) {
+        UserInfo createdUser = userInfoService.createUser(userDetail);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDetails> updateUser(@PathVariable Long id, @RequestBody UserDetails userDetail) {
-        UserDetails updatedUser = userDetailsService.updateUser(id, userDetail);
+    public ResponseEntity<UserInfo> updateUser(@PathVariable Long id, @RequestBody UserInfo userDetail) {
+        UserInfo updatedUser = userInfoService.updateUser(id, userDetail);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        userDetailsService.deleteUser(id);
+        userInfoService.deleteUser(id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDetails> getUserById(@PathVariable Long id) {
-        UserDetails user = userDetailsService.getUserById(id);
+    public ResponseEntity<UserInfo> getUserById(@PathVariable Long id) {
+        UserInfo user = userInfoService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDetails>> getAllUsers() {
-        List<UserDetails> users = userDetailsService.getAllUsers();
+    public ResponseEntity<List<UserInfo>> getAllUsers() {
+        List<UserInfo> users = userInfoService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
@@ -51,7 +51,7 @@ public class UserDetailsController {
         String username = credentials.get("username");
         String password = credentials.get("password");
 
-        if (userDetailsService.checkUserAndPassword(username, password)) {
+        if (userInfoService.checkUserAndPassword(username, password)) {
             return ResponseEntity.ok(true);
         } else {
             return ResponseEntity.ok(false);

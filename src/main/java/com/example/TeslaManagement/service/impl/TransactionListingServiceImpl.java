@@ -2,7 +2,6 @@ package com.example.TeslaManagement.service.impl;
 
 import com.example.TeslaManagement.DTO.TransactionListingDTO;
 import com.example.TeslaManagement.model.Transactions;
-import com.example.TeslaManagement.model.UserDetails;
 import com.example.TeslaManagement.repository.TransactionsRepo;
 import com.example.TeslaManagement.service.TransactionListingService;
 import jakarta.transaction.Transactional;

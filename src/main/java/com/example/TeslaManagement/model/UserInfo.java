@@ -1,6 +1,7 @@
 package com.example.TeslaManagement.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_detail")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class UserDetails {
+public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -22,7 +23,7 @@ public class UserDetails {
     @Column(nullable = false)
     private String username;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     private Roles role;
 
@@ -31,6 +32,7 @@ public class UserDetails {
     private Branches branch;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @CreationTimestamp
@@ -44,7 +46,7 @@ public class UserDetails {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
-    public UserDetails(Long id, String username, Roles role, Branches branch, String password, LocalDateTime createdAt, LocalDateTime modifiedAt, boolean active) {
+    public UserInfo(Long id, String username, Roles role, Branches branch, String password, LocalDateTime createdAt, LocalDateTime modifiedAt, boolean active) {
         this.id = id;
         this.username = username;
         this.role = role;
@@ -55,7 +57,7 @@ public class UserDetails {
         this.active = active;
     }
 
-    public UserDetails(String username, Roles role, Branches branch, String password, LocalDateTime createdAt) {
+    public UserInfo(String username, Roles role, Branches branch, String password, LocalDateTime createdAt) {
         this.username = username;
         this.role = role;
         this.branch = branch;
@@ -64,7 +66,7 @@ public class UserDetails {
         this.active = true;
     }
 
-    public UserDetails() {
+    public UserInfo() {
 
     }
 

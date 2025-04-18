@@ -5,7 +5,6 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -13,7 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name = "accounts")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class Accounts {
+public class Accounts extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "account_id")
@@ -28,7 +27,7 @@ public class Accounts {
 
     @ManyToOne
     @JoinColumn(name = "transaction_made_by", referencedColumnName = "id")
-    private UserDetails transactionMadeBy;
+    private UserInfo transactionMadeBy;
 
     @Column(name = "comments")
     private String comments;
@@ -68,11 +67,11 @@ public class Accounts {
         this.date = date;
     }
 
-    public UserDetails getReceivedBy() {
+    public UserInfo getReceivedBy() {
         return transactionMadeBy;
     }
 
-    public void setReceivedBy(UserDetails receivedBy) {
+    public void setReceivedBy(UserInfo receivedBy) {
         this.transactionMadeBy = receivedBy;
     }
 
@@ -108,7 +107,7 @@ public class Accounts {
         isDelete = delete;
     }
 
-    public Accounts(Long accountId, Transactions transaction, Date date, UserDetails receivedBy, String comments, LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDelete) {
+    public Accounts(Long accountId, Transactions transaction, Date date, UserInfo receivedBy, String comments, LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDelete) {
         this.accountId = accountId;
         this.transaction = transaction;
         this.date = date;
