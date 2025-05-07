@@ -11,5 +11,5 @@ public interface UserInfoService {
     UserInfo getUserById(Long id);
     List<UserInfo> getAllUsers();
     public boolean checkUserAndPassword(String username,String password);
-    //UserInfo loadUserByUsername(String username);
+    UserInfo loadUserByUsername(String username);
 }

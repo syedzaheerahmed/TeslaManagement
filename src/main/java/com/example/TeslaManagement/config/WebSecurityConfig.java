@@ -19,7 +19,7 @@ import jakarta.annotation.Resource;
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
-    @Resource(name = "userService")
+    @Resource (name = "userService")
     private UserDetailsService userDetailsService;
 
     @Autowired
