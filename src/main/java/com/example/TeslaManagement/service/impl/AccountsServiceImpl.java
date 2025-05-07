@@ -1,7 +1,5 @@
 package com.example.TeslaManagement.service.impl;
 
-import com.example.TeslaManagement.model.Accounts;
-import com.example.TeslaManagement.model.Branches;
 import com.example.TeslaManagement.repository.AccountsRepo;
 import com.example.TeslaManagement.service.AccountsService;
 import org.springframework.beans.factory.annotation.Autowired;

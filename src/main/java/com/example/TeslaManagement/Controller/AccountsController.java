@@ -1,6 +1,5 @@
 package com.example.TeslaManagement.Controller;
 
-import com.example.TeslaManagement.model.Accounts;
 import com.example.TeslaManagement.service.AccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

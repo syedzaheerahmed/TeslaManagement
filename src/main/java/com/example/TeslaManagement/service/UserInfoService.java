@@ -1,15 +1,14 @@
 package com.example.TeslaManagement.service;
 
-import com.example.TeslaManagement.model.UserInfo;
+import com.example.TeslaManagement.model.User;
 
 import java.util.List;
 
 public interface UserInfoService {
-    UserInfo createUser(UserInfo userDetail);
-    UserInfo updateUser(Long id, UserInfo userDetail);
+    User createUser(User userDetail);
+    User updateUser(Long id, User userDetail);
     void deleteUser(Long id);
-    UserInfo getUserById(Long id);
-    List<UserInfo> getAllUsers();
+    User getUserById(Long id);
+    List<User> getAllUsers();
     public boolean checkUserAndPassword(String username,String password);
-    UserInfo loadUserByUsername(String username);
 }

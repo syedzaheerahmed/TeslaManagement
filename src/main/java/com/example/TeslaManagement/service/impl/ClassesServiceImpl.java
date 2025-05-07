@@ -1,6 +1,6 @@
 package com.example.TeslaManagement.service.impl;
 
-import com.example.TeslaManagement.model.Classes;
+import com.example.TeslaManagement.model.Class;
 import com.example.TeslaManagement.repository.ClassesRepo;
 import com.example.TeslaManagement.service.ClassesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,9 @@ public class ClassesServiceImpl implements ClassesService {
     ClassesRepo classesRepo;
 
     @Override
-    public String createClasses(Classes classes) {
+    public String createClasses(Class aClass) {
         try{
-            classesRepo.save(classes);
+            classesRepo.save(aClass);
         }
         catch (Exception e) {
             System.out.println("Exception Occurred : "+e.getMessage());
@@ -26,9 +26,9 @@ public class ClassesServiceImpl implements ClassesService {
     }
 
     @Override
-    public String updateClasses(Classes classes) {
+    public String updateClasses(Class aClass) {
         try{
-            classesRepo.save(classes);
+            classesRepo.save(aClass);
         }
         catch (Exception e) {
             System.out.println("Exception Occurred : "+e.getMessage());
@@ -50,7 +50,7 @@ public class ClassesServiceImpl implements ClassesService {
     }
 
     @Override
-    public Classes getClassDetails(Long class_id) {
+    public Class getClassDetails(Long class_id) {
         try {
             if(classesRepo.findById(class_id).isPresent()) {
                 return classesRepo.getReferenceById(class_id);
@@ -62,7 +62,7 @@ public class ClassesServiceImpl implements ClassesService {
     }
 
     @Override
-    public List<Classes> getAllClasses() {
+    public List<Class> getAllClasses() {
         return classesRepo.findAll();
     }
 }

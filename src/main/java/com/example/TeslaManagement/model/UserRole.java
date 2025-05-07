@@ -1,0 +1,48 @@
+package com.example.TeslaManagement.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.io.Serializable;
+
+
+/**
+ * The persistent class for the user_roles database table.
+ * 
+ */
+
+@Entity
+@Table(
+		name = "user_roles",
+		uniqueConstraints = {
+				@UniqueConstraint(
+						name = "unique_user_role_branch",
+						columnNames = {"user_id", "role_id", "branch_id"}
+				)
+		}
+)
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserRole implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="user_role_id")
+	private Long userRoleId;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "branch_id", nullable = true)
+	private Branch branch; // NULL for Super Admin, required for branch-specific roles
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "role_id", nullable = false)
+	private Roles role;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+}

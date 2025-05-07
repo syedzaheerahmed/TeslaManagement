@@ -94,7 +94,7 @@ public class TransactionsServiceImpl implements TransactionsService {
         Branches branch = branchRepository.findById(requestDTO.getBranchId())
                 .orElseThrow(() -> new ReferenceNotFoundException("Branch not found"));
 
-        UserInfo receivedBy = userInfoRepository.findById(requestDTO.getTransactionMadeBy())
+        User receivedBy = userInfoRepository.findById(requestDTO.getTransactionMadeBy())
                 .orElseThrow(() -> new ReferenceNotFoundException("User not found"));
 
         Staff staff = null;

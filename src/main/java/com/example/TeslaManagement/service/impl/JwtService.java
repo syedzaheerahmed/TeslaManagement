@@ -1,6 +1,6 @@
 package com.example.TeslaManagement.service.impl;
 
-import com.example.TeslaManagement.model.UserInfo;
+import com.example.TeslaManagement.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -45,9 +45,9 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserInfo userInfo) {
+    public Boolean validateToken(String token, User user) {
         final String username = extractUsername(token);
-        return (username.equals(userInfo.getUsername()) && !isTokenExpired(token));
+        return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }
 
 

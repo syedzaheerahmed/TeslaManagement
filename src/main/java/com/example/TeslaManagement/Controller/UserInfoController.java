@@ -1,6 +1,6 @@
 package com.example.TeslaManagement.Controller;
 
-import com.example.TeslaManagement.model.UserInfo;
+import com.example.TeslaManagement.model.User;
 import com.example.TeslaManagement.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,14 +17,14 @@ public class UserInfoController {
     private UserInfoService userInfoService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserInfo> createUser(@RequestBody UserInfo userDetail) {
-        UserInfo createdUser = userInfoService.createUser(userDetail);
+    public ResponseEntity<User> createUser(@RequestBody User userDetail) {
+        User createdUser = userInfoService.createUser(userDetail);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserInfo> updateUser(@PathVariable Long id, @RequestBody UserInfo userDetail) {
-        UserInfo updatedUser = userInfoService.updateUser(id, userDetail);
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetail) {
+        User updatedUser = userInfoService.updateUser(id, userDetail);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
@@ -35,14 +35,14 @@ public class UserInfoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserInfo> getUserById(@PathVariable Long id) {
-        UserInfo user = userInfoService.getUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userInfoService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping
-    public ResponseEntity<List<UserInfo>> getAllUsers() {
-        List<UserInfo> users = userInfoService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userInfoService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 

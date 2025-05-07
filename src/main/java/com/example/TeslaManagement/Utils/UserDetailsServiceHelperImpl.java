@@ -1,6 +1,5 @@
 package com.example.TeslaManagement.Utils;
 
-import com.example.TeslaManagement.model.UserInfo;
 //import com.example.TeslaManagement.repository.UserInfoRepo;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

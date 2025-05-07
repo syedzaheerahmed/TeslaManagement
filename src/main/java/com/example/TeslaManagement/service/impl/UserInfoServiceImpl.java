@@ -1,6 +1,6 @@
 package com.example.TeslaManagement.service.impl;
 
-import com.example.TeslaManagement.model.UserInfo;
+import com.example.TeslaManagement.model.User;
 import com.example.TeslaManagement.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -22,14 +22,14 @@ public class UserInfoServiceImpl implements UserInfoService, UserDetailsService 
     UserInfoRepo userInfoRepo;
 
     @Override
-    public UserInfo createUser(UserInfo userDetail) {
+    public User createUser(User userDetail) {
         return userInfoRepo.save(userDetail);
 
     }
 
     @Override
-    public UserInfo updateUser(Long id, UserInfo userDetail) {
-        UserInfo existingUser = userInfoRepo.findById(id)
+    public User updateUser(Long id, User userDetail) {
+        User existingUser = userInfoRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("UserDetail "+id));
         existingUser.setUsername(userDetail.getUsername());
         existingUser.setPassword(userDetail.getPassword());
@@ -41,19 +41,19 @@ public class UserInfoServiceImpl implements UserInfoService, UserDetailsService 
 
     @Override
     public void deleteUser(Long id) {
-        UserInfo user = userInfoRepo.findById(id)
+        User user = userInfoRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("UserDetail "+id));
         userInfoRepo.delete(user);
     }
 
     @Override
-    public UserInfo getUserById(Long id) {
+    public User getUserById(Long id) {
         return userInfoRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("UserDetail "+id));
     }
 
     @Override
-    public List<UserInfo> getAllUsers() {
+    public List<User> getAllUsers() {
         return userInfoRepo.findAll();
     }
 
@@ -66,7 +66,7 @@ public class UserInfoServiceImpl implements UserInfoService, UserDetailsService 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         //logger.debug("Entering in loadUserByUsername Method...");
-        UserInfo user = userInfoRepo.findByUsername(username);
+        User user = userInfoRepo.findByUsername(username);
         if(user == null){
             //logger.error("Username not found: " + username);
             throw new UsernameNotFoundException("could not found user..!!");
@@ -76,11 +76,11 @@ public class UserInfoServiceImpl implements UserInfoService, UserDetailsService 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthority(user));
     }
 
-    private Set<SimpleGrantedAuthority> getAuthority(UserInfo user) {
+    private Set<SimpleGrantedAuthority> getAuthority(User user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-        });
+//        user.getRoles().forEach(role -> {
+//            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+//        });
         return authorities;
     }
 

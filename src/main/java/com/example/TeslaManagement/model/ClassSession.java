@@ -1,0 +1,51 @@
+package com.example.TeslaManagement.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Entity;
+
+import java.io.Serializable;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.Date;
+
+
+/**
+ * The persistent class for the class_sessions database table.
+ * 
+ */
+@Entity
+@Table(
+		name = "class_sessions",
+		uniqueConstraints = {
+				@UniqueConstraint(
+						name = "unique_class_session",
+						columnNames = {"class_id", "session_date"}
+				)
+		}
+)
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ClassSession implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "class_session_id")
+	private Long classSessionId;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "class_id", referencedColumnName = "class_id", nullable = false)
+	private Class classEntity;
+
+	@Column(name = "session_date", nullable = false)
+	private LocalDate sessionDate;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "staff_id", referencedColumnName = "staff_id", nullable = false)
+	private Staff staff;
+}

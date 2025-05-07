@@ -1,21 +1,21 @@
 package com.example.TeslaManagement.service.impl;
 
-import com.example.TeslaManagement.model.Branches;
-import com.example.TeslaManagement.repository.BranchesRepo;
-import com.example.TeslaManagement.service.BranchesService;
+import com.example.TeslaManagement.model.Branch;
+import com.example.TeslaManagement.repository.BranchRepo;
+import com.example.TeslaManagement.service.BranchService;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BranchesServiceImpl implements BranchesService {
-    BranchesRepo branchesRepo;
-    public BranchesServiceImpl(BranchesRepo branchesRepo) {
-        this.branchesRepo = branchesRepo;
+public class BranchServiceImpl implements BranchService {
+    BranchRepo BranchRepo;
+    public BranchServiceImpl(BranchRepo BranchRepo) {
+        this.BranchRepo = BranchRepo;
     }
     @Override
-    public String createBranches(Branches branches) {
+    public String createBranch(Branch Branch) {
         try{
-            branchesRepo.save(branches);
+            BranchRepo.save(Branch);
         }
         catch (Exception e) {
             System.out.println("Exception Occurred : "+e.getMessage());
@@ -24,9 +24,9 @@ public class BranchesServiceImpl implements BranchesService {
         return "Branch details added successfully";
     }
     @Override
-    public String updateBranches(Branches branches) {
+    public String updateBranch(Branch Branch) {
         try{
-            branchesRepo.save(branches);
+            BranchRepo.save(Branch);
         }
         catch (Exception e) {
             System.out.println("Exception Occurred : "+e.getMessage());
@@ -35,9 +35,9 @@ public class BranchesServiceImpl implements BranchesService {
         return "Branch details updated successfully";
     }
     @Override
-    public String deleteBranches(Long branch_id) {
+    public String deleteBranch(Long branch_id) {
         try{
-            branchesRepo.deleteById(branch_id);
+            BranchRepo.deleteById(branch_id);
         }
         catch (Exception e) {
             System.out.println("Exception Occurred : "+e.getMessage());
@@ -46,10 +46,10 @@ public class BranchesServiceImpl implements BranchesService {
         return "Branch details deleted successfully";
     }
     @Override
-    public Branches getBranchDetails(Long branch_id) {
+    public Branch getBranchDetails(Long branch_id) {
         try {
-            if(branchesRepo.findById(branch_id).isPresent()) {
-                return branchesRepo.getReferenceById(branch_id);
+            if(BranchRepo.findById(branch_id).isPresent()) {
+                return BranchRepo.getReferenceById(branch_id);
             }
         }catch (Exception e) {
             System.out.println("Exception Occurred : "+e.getMessage());
@@ -57,7 +57,7 @@ public class BranchesServiceImpl implements BranchesService {
         return null;
     }
     @Override
-    public List<Branches> getAllBranches() {
-        return branchesRepo.findAll();
+    public List<Branch> getAllBranch() {
+        return BranchRepo.findAll();
     }
 }

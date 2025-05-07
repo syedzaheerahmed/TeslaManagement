@@ -2,185 +2,86 @@ package com.example.TeslaManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
+import java.sql.Timestamp;
 import java.util.Date;
 
-@Data
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "student")
+@Table(name = "students")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class Student {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Student implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    public long student_id;
-    public String student_name;
-    public Integer batch_year;
-    public String gender;
-    public Date dob;
-    public String school_name;
-    public String school_std;
-    public String board_of_school;
-    public String extra_details;
-    public String parent_name;
-    public String parent_contact;
-    public String student_address;
-    public Boolean is_approved = false;
-    public Boolean is_active = true;
-    public Boolean is_fees_paid ;
-    public String reason_for_deactivation;
-    public Date created_at = new Date();
-    public Date updated_at = new Date();
-    public String created_by;
-    @ManyToOne
-    @JoinColumn(name = "branch_id", referencedColumnName = "branch_id")
-    private Branches branch_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "student_id")
+    private Long studentId;
 
-    public Student(long student_id, Integer batch_year, String student_name, String gender, Date dob, String school_name, String school_std, String board_of_school, String parent_name, String extra_details, String parent_contact, Boolean is_approved, String student_address, Boolean is_active, Boolean is_fees_paid, String reason_for_deactivation, Date created_at, Date updated_at, String created_by, Branches branch_id) {
-        this.student_id = student_id;
-        this.batch_year = batch_year;
-        this.student_name = student_name;
-        this.gender = gender;
-        this.dob = dob;
-        this.school_name = school_name;
-        this.school_std = school_std;
-        this.board_of_school = board_of_school;
-        this.parent_name = parent_name;
-        this.extra_details = extra_details;
-        this.parent_contact = parent_contact;
-        this.is_approved = is_approved;
-        this.student_address = student_address;
-        this.is_active = is_active;
-        this.is_fees_paid = is_fees_paid;
-        this.reason_for_deactivation = reason_for_deactivation;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-        this.created_by = created_by;
-        this.branch_id = branch_id;
-    }
+    @Column(name = "student_name", nullable = false)
+    private String studentName;
 
-    public Student() {
-    }
-    public long getStudent_id() {
-        return student_id;
-    }
-    public void setStudent_id(long student_id) {
-        this.student_id = student_id;
-    }
-    public String getStudent_name() {
-        return student_name;
-    }
-    public void setStudent_name(String student_name) {
-        this.student_name = student_name;
-    }
-    public Integer getBatch_year() {
-        return batch_year;
-    }
-    public void setBatch_year(Integer batch_year) {
-        this.batch_year = batch_year;
-    }
-    public String getGender() {
-        return gender;
-    }
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-    public Date getDob() {
-        return dob;
-    }
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-    public String getSchool_name() {
-        return school_name;
-    }
-    public void setSchool_name(String school_name) {
-        this.school_name = school_name;
-    }
-    public String getSchool_std() {
-        return school_std;
-    }
-    public void setSchool_std(String school_std) {
-        this.school_std = school_std;
-    }
-    public String getBoard_of_school() {
-        return board_of_school;
-    }
-    public void setBoard_of_school(String board_of_school) {
-        this.board_of_school = board_of_school;
-    }
-    public String getExtra_details() {
-        return extra_details;
-    }
-    public void setExtra_details(String extra_details) {
-        this.extra_details = extra_details;
-    }
-    public String getParent_name() {
-        return parent_name;
-    }
-    public void setParent_name(String parent_name) {
-        this.parent_name = parent_name;
-    }
-    public String getParent_contact() {
-        return parent_contact;
-    }
-    public void setParent_contact(String parent_contact) {
-        this.parent_contact = parent_contact;
-    }
-    public String getStudent_address() {
-        return student_address;
-    }
-    public void setStudent_address(String student_address) {
-        this.student_address = student_address;
-    }
-    public Boolean getIs_approved() {
-        return is_approved;
-    }
-    public void setIs_approved(Boolean is_approved) {
-        this.is_approved = is_approved;
-    }
-    public Boolean getIs_active() {
-        return is_active;
-    }
-    public void setIs_active(Boolean is_active) {
-        this.is_active = is_active;
-    }
-    public String getReason_for_deactivation() {
-        return reason_for_deactivation;
-    }
-    public void setReason_for_deactivation(String reason_for_deactivation) {
-        this.reason_for_deactivation = reason_for_deactivation;
-    }
-    public Date getCreated_at() {
-        return created_at;
-    }
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
-    }
-    public Date getUpdated_at() {
-        return updated_at;
-    }
-    public void setUpdated_at(Date updated_at) {
-        this.updated_at = updated_at;
-    }
-    public String getCreated_by() {
-        return created_by;
-    }
-    public void setCreated_by(String created_by) {
-        this.created_by = created_by;
-    }
-    public Branches getBranch_id() {
-        return branch_id;
-    }
+    @Column(name = "dob")
+    private LocalDate dob;
 
-    public void setBranch_id(Branches branch_id) {
-        this.branch_id = branch_id;
-    }
+    @Column(name = "gender", length = 10)
+    private String gender;
 
-    public Boolean getIs_fees_paid() {
-        return is_fees_paid;
-    }
+    @Column(name = "student_address")
+    private String studentAddress;
 
-    public void setIs_fees_paid(Boolean is_fees_paid) {
-        this.is_fees_paid = is_fees_paid;
-    }
+    @Column(name = "parent_name")
+    private String parentName;
+
+    @Column(name = "parent_contact")
+    private String parentContact;
+
+    @Column(name = "school_name")
+    private String schoolName;
+
+    @Column(name = "school_std", length = 50)
+    private String schoolStd;
+
+    @Column(name = "board_of_school")
+    private String boardOfSchool;
+
+    @Column(name = "batch_year")
+    private Integer batchYear;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+
+    @Column(name = "is_approved", nullable = false)
+    private Boolean isApproved = false;
+
+    @Column(name = "reason_for_deactivation")
+    private String reasonForDeactivation;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    // Many-to-One relationship with User (creator)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by", referencedColumnName = "user_id")
+    private User createdBy;  //ref users.user_id
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    // Many-to-One relationship with Branch
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "branch_id", nullable = false)
+    private Branch branch;
+
+    @Column(name = "is_fees_paid", nullable = false)
+    private Boolean isFeesPaid = false;
+
 }
