@@ -3,7 +3,10 @@ package com.example.TeslaManagement.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serial;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -19,6 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Student implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -56,27 +60,27 @@ public class Student implements Serializable {
     @Column(name = "batch_year")
     private Integer batchYear;
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isActive ;
 
-    @Column(name = "is_approved", nullable = false)
-    private Boolean isApproved = false;
+    @Column(name = "is_approved", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isApproved ;
 
     @Column(name = "reason_for_deactivation")
     private String reasonForDeactivation;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // Many-to-One relationship with User (creator)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", referencedColumnName = "user_id")
     private User createdBy;  //ref users.user_id
 
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // Many-to-One relationship with Branch
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id", nullable = false)
     private Branch branch;

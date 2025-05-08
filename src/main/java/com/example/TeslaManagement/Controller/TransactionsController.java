@@ -4,7 +4,7 @@ import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
 import com.example.TeslaManagement.DTO.TransactionAccountRequestDTO;
 import com.example.TeslaManagement.DTO.TransactionListingDTO;
 import com.example.TeslaManagement.DTO.TransactionReportDTO;
-import com.example.TeslaManagement.model.Transactions;
+import com.example.TeslaManagement.model.Transaction;
 import com.example.TeslaManagement.service.TransactionListingService;
 import com.example.TeslaManagement.service.TransactionReportService;
 import com.example.TeslaManagement.service.TransactionsService;
@@ -37,9 +37,9 @@ public class TransactionsController {
 
 
     @PostMapping("/transaction/new")
-    public ResponseEntity<?> createTransaction(@RequestBody Transactions transaction) {
+    public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
         try {
-            Transactions savedTransaction = transactionsService.createTransaction(transaction);
+            Transaction savedTransaction = transactionsService.createTransaction(transaction);
             return new ResponseEntity<>(savedTransaction, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -50,7 +50,7 @@ public class TransactionsController {
     @GetMapping("/transaction/{id}")
     public ResponseEntity<?> getTransactionById(@PathVariable Long id) {
         try {
-            Transactions transaction = transactionsService.getTransactionById(id);
+            Transaction transaction = transactionsService.getTransactionById(id);
             return ResponseEntity.ok(transaction);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -64,7 +64,7 @@ public class TransactionsController {
     @GetMapping("/transaction")
     public ResponseEntity<?> getAllTransactions() {
         try {
-            List<Transactions> transactions = transactionsService.getAllTransactions();
+            List<Transaction> transactions = transactionsService.getAllTransactions();
             return ResponseEntity.ok(transactions);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -74,9 +74,9 @@ public class TransactionsController {
 
     @PutMapping("/transaction/{id}")
     public ResponseEntity<?> updateTransaction(
-            @PathVariable Long id, @RequestBody Transactions transaction) {
+            @PathVariable Long id, @RequestBody Transaction transaction) {
         try {
-            Transactions updatedTransaction = transactionsService.updateTransaction(id, transaction);
+            Transaction updatedTransaction = transactionsService.updateTransaction(id, transaction);
             return ResponseEntity.ok(updatedTransaction);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -93,7 +93,7 @@ public class TransactionsController {
             if(id == null){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Given id is null");
             }
-            Transactions savedTransaction = transactionsService.deleteTransaction(id);
+            Transaction savedTransaction = transactionsService.deleteTransaction(id);
             return ResponseEntity.ok(savedTransaction);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -108,7 +108,7 @@ public class TransactionsController {
     public ResponseEntity<?> createTransaction(
             @RequestBody TransactionAccountRequestDTO requestDTO) {
         try {
-            Transactions savedTransaction = transactionsService.createTransactionWithAccount(requestDTO);
+            Transaction savedTransaction = transactionsService.createTransactionWithAccount(requestDTO);
             return new ResponseEntity<>(savedTransaction, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -139,7 +139,7 @@ public class TransactionsController {
     public ResponseEntity<?> changeTransactionId(
             @PathVariable Long transactionId) {
         try {
-            Transactions updatedTransaction = transactionsService.updateTransactionInValid(transactionId);
+            Transaction updatedTransaction = transactionsService.updateTransactionInValid(transactionId);
             return ResponseEntity.ok(updatedTransaction);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

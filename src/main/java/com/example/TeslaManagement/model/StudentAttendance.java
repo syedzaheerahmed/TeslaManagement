@@ -3,25 +3,53 @@ package com.example.TeslaManagement.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(
+        name = "student_attendance",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "unique_attendance",
+                        columnNames = {"class_session_id", "student_id"}
+                )
+        }
+)
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "student_attendance")
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class StudentAttendance {
+public class StudentAttendance implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name="attendance_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "attendance_id")
     private Long attendanceId;
 
-    @Column(name="class_session_id")
-    private Long classSessionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_session_id", referencedColumnName = "class_session_id", nullable = false)
+    private ClassSession classSession;
 
-    @Column(name="is_present")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", referencedColumnName = "student_id", nullable = false)
+    private Student student;
+
+    @Column(name = "is_present", nullable = false)
     private Boolean isPresent;
 
-    @Column(name="student_id")
-    private Long studentId;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 }

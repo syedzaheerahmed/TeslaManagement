@@ -1,6 +1,6 @@
 package com.example.TeslaManagement.repository;
 
-import com.example.TeslaManagement.model.Transactions;
+import com.example.TeslaManagement.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,11 +10,11 @@ import java.util.Date;
 import java.util.List;
 
 @RepositoryRestResource
-public interface TransactionsRepo extends JpaRepository<Transactions, Long> {
-    List<Transactions> findByTransactionDateGreaterThanEqualAndIsInvalidTransactionFalse(Date fromDate);
+public interface TransactionsRepo extends JpaRepository<Transaction, Long> {
+    List<Transaction> findByTransactionDateGreaterThanEqualAndIsInvalidTransactionFalse(Date fromDate);
 
     @Query("SELECT t FROM Transactions t WHERE t.transactionDate >= :fromDate ORDER BY t.transactionDate DESC")
-    List<Transactions> findTransactionsFromDate(
+    List<Transaction> findTransactionsFromDate(
             @Param("fromDate") Date fromDate
     );
 }

@@ -20,10 +20,7 @@ public class TransactionsServiceImpl implements TransactionsService {
     private final TransactionsRepo transactionsRepository;
 
     @Autowired
-    private AccountsRepo accountRepository;
-
-    @Autowired
-    private BranchesRepo branchRepository;
+    private BranchRepo branchRepository;
 
     @Autowired
     private StaffRepo staffRepository;
@@ -40,31 +37,31 @@ public class TransactionsServiceImpl implements TransactionsService {
     }
 
     @Override
-    public Transactions createTransaction(Transactions transaction) {
+    public Transaction createTransaction(Transaction transaction) {
         return transactionsRepository.save(transaction);
     }
 
     @Override
-    public Transactions getTransactionById(Long id) {
+    public Transaction getTransactionById(Long id) {
         return transactionsRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + id));
     }
 
     @Override
-    public List<Transactions> getAllTransactions() {
+    public List<Transaction> getAllTransactions() {
         return transactionsRepository.findAll();
     }
 
     @Override
-    public Transactions updateTransaction(Long id, Transactions transaction) {
-        Transactions existingTransaction = getTransactionById(id);
+    public Transaction updateTransaction(Long id, Transaction transaction) {
+        Transaction existingTransaction = getTransactionById(id);
         existingTransaction.setTransactionType(transaction.getTransactionType());
         existingTransaction.setCategory(transaction.getCategory());
         existingTransaction.setAmount(transaction.getAmount());
         existingTransaction.setPaymentMode(transaction.getPaymentMode());
-        existingTransaction.setInvalidTransaction(transaction.isInvalidTransaction());
-        existingTransaction.setTransactionDate(transaction.getTransactionDate());
-        existingTransaction.setComments(transaction.getComments());
+//        existingTransaction.setInvalidTransaction(transaction.isInvalidTransaction());
+//        existingTransaction.setTransactionDate(transaction.getTransactionDate());
+//        existingTransaction.setComments(transaction.getComments());
         existingTransaction.setBranch(transaction.getBranch());
         existingTransaction.setStaff(transaction.getStaff());
         existingTransaction.setStudent(transaction.getStudent());
@@ -73,25 +70,25 @@ public class TransactionsServiceImpl implements TransactionsService {
     }
 
     @Override
-    public Transactions updateTransactionInValid(Long transactionId){
-        Transactions existingTransaction = getTransactionById(transactionId);
-        existingTransaction.setInvalidTransaction(true);
+    public Transaction updateTransactionInValid(Long transactionId){
+        Transaction existingTransaction = getTransactionById(transactionId);
+       // existingTransaction.setInvalidTransaction(true);
         return transactionsRepository.save(existingTransaction);
     }
 
     @Override
-    public Transactions deleteTransaction(Long id) {
-        Transactions transaction = getTransactionById(id);
-        transaction.setDelete(true);
+    public Transaction deleteTransaction(Long id) {
+        Transaction transaction = getTransactionById(id);
+      //  transaction.setDelete(true);
         return transactionsRepository.save(transaction);
     }
 
     @Transactional
-    public Transactions createTransactionWithAccount(@Valid TransactionAccountRequestDTO requestDTO) {
+    public Transaction createTransactionWithAccount(@Valid TransactionAccountRequestDTO requestDTO) {
 
 
         // Validate References
-        Branches branch = branchRepository.findById(requestDTO.getBranchId())
+        Branch branch = branchRepository.findById(requestDTO.getBranchId())
                 .orElseThrow(() -> new ReferenceNotFoundException("Branch not found"));
 
         User receivedBy = userInfoRepository.findById(requestDTO.getTransactionMadeBy())
@@ -111,12 +108,12 @@ public class TransactionsServiceImpl implements TransactionsService {
         }
 
         // Create Transaction
-        Transactions transaction = new Transactions();
-        transaction.setTransactionType(requestDTO.getTransactionType());
-        transaction.setCategory(requestDTO.getCategory());
-        transaction.setAmount(requestDTO.getAmount());
-        transaction.setPaymentMode(requestDTO.getPaymentMode());
-        transaction.setTransactionDate(requestDTO.getTransactionDate());
+        Transaction transaction = new Transaction();
+//        transaction.setTransactionType(requestDTO.getTransactionType());
+//        transaction.setCategory(requestDTO.getCategory());
+//        transaction.setAmount(requestDTO.getAmount());
+//        transaction.setPaymentMode(requestDTO.getPaymentMode());
+//        transaction.setTransactionDate(requestDTO.getTransactionDate());
         transaction.setComments(requestDTO.getTransactionComments());
         transaction.setBranch(branch);
         transaction.setTransactionMadeBy(receivedBy);
@@ -126,18 +123,18 @@ public class TransactionsServiceImpl implements TransactionsService {
         if (student != null) transaction.setStudent(student);
 
         // Save Transaction First
-        Transactions savedTransaction = transactionsRepository.save(transaction);
+        Transaction savedTransaction = transactionsRepository.save(transaction);
         System.out.printf("Transaction created with ID: {}", savedTransaction.getTransactionId());
 
-        // Create Account
-        Accounts account = new Accounts();
-        account.setTransaction(savedTransaction);
-        account.setDate(requestDTO.getTransactionDate());
-        account.setReceivedBy(transaction.getTransactionMadeBy());
-        account.setComments(requestDTO.getAccountComments());
-
-        // Save Account
-        accountRepository.save(account);
+//        // Create Account
+//        Accounts account = new Accounts();
+//        account.setTransaction(savedTransaction);
+//        account.setDate(requestDTO.getTransactionDate());
+//        account.setReceivedBy(transaction.getTransactionMadeBy());
+//        account.setComments(requestDTO.getAccountComments());
+//
+//        // Save Account
+//        accountRepository.save(account);
 
         return savedTransaction;
     }

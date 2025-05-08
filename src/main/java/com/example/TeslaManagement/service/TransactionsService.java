@@ -1,23 +1,23 @@
 package com.example.TeslaManagement.service;
 
 import com.example.TeslaManagement.DTO.TransactionAccountRequestDTO;
-import com.example.TeslaManagement.model.Transactions;
+import com.example.TeslaManagement.model.Transaction;
 
 import java.util.List;
 
 public interface TransactionsService {
 
-    Transactions createTransaction(Transactions transaction);
+    Transaction createTransaction(Transaction transaction);
 
-    Transactions getTransactionById(Long id);
+    Transaction getTransactionById(Long id);
 
-    List<Transactions> getAllTransactions();
+    List<Transaction> getAllTransactions();
 
-    Transactions updateTransaction(Long id, Transactions transaction);
+    Transaction updateTransaction(Long id, Transaction transaction);
 
-    Transactions updateTransactionInValid(Long transactionId);
+    Transaction updateTransactionInValid(Long transactionId);
 
-    Transactions deleteTransaction(Long id);
+    Transaction deleteTransaction(Long id);
 
-    Transactions createTransactionWithAccount( TransactionAccountRequestDTO transactions);
+    Transaction createTransactionWithAccount( TransactionAccountRequestDTO transactions);
 }

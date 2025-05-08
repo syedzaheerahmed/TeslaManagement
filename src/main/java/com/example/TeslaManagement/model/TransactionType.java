@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 
@@ -19,13 +20,16 @@ import java.io.Serializable;
 @Table(name="transaction_types")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class TransactionType implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="type_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="type_id", nullable = false)
 	private Long typeId;
 
-	@Column(name="type_name")
+	@Column(name="type_name", nullable = false, unique = true)
 	private String typeName;
-
 }
+
+//'Debit', 'Credit'

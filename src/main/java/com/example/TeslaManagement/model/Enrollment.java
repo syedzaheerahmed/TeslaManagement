@@ -3,9 +3,12 @@ package com.example.TeslaManagement.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -46,6 +49,14 @@ public class Enrollment implements Serializable {
 
 	@Column(name = "enrollment_date", nullable = false)
 	private LocalDate enrollmentDate;
+
+	@CreationTimestamp
+	@Column(name = "created_at", nullable = false, updatable = false)
+	private LocalDateTime createdAt;
+
+	@UpdateTimestamp
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
 
 //	/**
 //	 * Called before persisting a new entity to set default enrollment date if not specified

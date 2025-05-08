@@ -1,10 +1,14 @@
 package com.example.TeslaManagement.model;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 
 /**
@@ -18,13 +22,23 @@ import lombok.*;
 @Table(name="payment_modes")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class PaymentMode implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="mode_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="mode_id", nullable = false)
 	private Long modeId;
 
-	@Column(name="mode_name")
+	@Column(name="mode_name", nullable = false, unique = true)
 	private String modeName;
 
+	@CreationTimestamp
+	@Column(name = "created_at", nullable = false, updatable = false)
+	private LocalDateTime createdAt;
+
+	@UpdateTimestamp
+	@Column(name = "updated_at", nullable = false)
+	private LocalDateTime updatedAt;
 }
+//'Cash', 'Card', 'Online'
