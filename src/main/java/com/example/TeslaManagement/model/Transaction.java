@@ -99,26 +99,4 @@ public class Transaction implements Serializable {
     @Column(name = "is_deleted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isDeleted;
 
-    /**
-     * Called before persisting a new entity
-     */
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-
-        // Set transaction date to now if not provided
-        if (this.date == null) {
-            this.date = now;
-        }
-    }
-
-    /**
-     * Called before updating an existing entity
-     */
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

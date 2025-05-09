@@ -58,13 +58,4 @@ public class Enrollment implements Serializable {
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
 
-//	/**
-//	 * Called before persisting a new entity to set default enrollment date if not specified
-//	 */
-//	@PrePersist
-//	protected void onCreate() {
-//		if (this.enrollmentDate == null) {
-//			this.enrollmentDate = LocalDate.now();
-//		}
-//	}
 }

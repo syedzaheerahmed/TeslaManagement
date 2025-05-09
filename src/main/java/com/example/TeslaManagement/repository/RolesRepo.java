@@ -4,9 +4,9 @@ import com.example.TeslaManagement.model.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.Optional;
+
 @RepositoryRestResource
 public interface RolesRepo extends JpaRepository<Roles,Long> {
-    boolean existsByUsernameAndPassword(String username,String password);
-
-    Roles findByUsername(String username);
+    Optional<Roles> findByRoleName(String roleName);
 }

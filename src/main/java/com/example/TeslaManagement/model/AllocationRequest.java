@@ -106,28 +106,6 @@ public class AllocationRequest implements Serializable {
 	@Column(name = "comments")
 	private String comments;
 
-	/**
-	 * Called before persisting a new entity
-	 */
-	@PrePersist
-	protected void onCreate() {
-		LocalDateTime now = LocalDateTime.now();
-		this.createdAt = now;
-		this.updatedAt = now;
-
-		// Set default request status if not provided
-		if (this.requestStatus == null) {
-			this.requestStatus = RequestStatus.Pending;
-		}
-	}
-
-	/**
-	 * Called before updating an existing entity
-	 */
-	@PreUpdate
-	protected void onUpdate() {
-		this.updatedAt = LocalDateTime.now();
-	}
 
 	/**
 	 * Helper method to get the actual entity based on entity_type

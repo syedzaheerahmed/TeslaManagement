@@ -2,6 +2,8 @@ package com.example.TeslaManagement.Controller;
 
 import com.example.TeslaManagement.model.Roles;
 import com.example.TeslaManagement.service.RolesService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
@@ -10,56 +12,35 @@ import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/v1/roles")
+@RequiredArgsConstructor
 public class RolesController {
 
-    RolesService rolesService;
-    public RolesController(RolesService rolesService) {
-        this.rolesService = rolesService;
+    private final RolesService rolesService;
+
+    @GetMapping
+    public ResponseEntity<List<Roles>> getAllRoles() {
+        return ResponseEntity.ok(rolesService.getAllRoles());
     }
 
-    //Get the given Role
-    @GetMapping("/getRoleDetails/{user_id}")
-    public Roles getRoleDetails(@PathVariable(value = "user_id") Long user_id) {
-        return rolesService.getRoleDetails(user_id);
+    @PostMapping
+    public ResponseEntity<Roles> createRole(@RequestBody Roles role) {
+        Roles savedRole = rolesService.createRole(role);
+        return new ResponseEntity<>(savedRole, HttpStatus.CREATED);
     }
 
-    @PostMapping("/loginUser")
-    public ResponseEntity<Boolean> loginUser(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
-        boolean credentialsValid = rolesService.checkUserAndPassword(username, password);
-        return ResponseEntity.ok(credentialsValid);
+    @GetMapping("/{id}")
+    public ResponseEntity<Roles> getRoleById(@PathVariable Long id) {
+        return ResponseEntity.ok(rolesService.getRoleById(id));
     }
 
-    @PostMapping("/resetPassword")
-    public ResponseEntity<Boolean> resetPassword(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
-        boolean credentialsValid = rolesService.resetPassword(username, password);
-        return ResponseEntity.ok(credentialsValid);
+    @PutMapping("/{id}")
+    public ResponseEntity<Roles> updateRole(@PathVariable Long id, @RequestBody Roles role) {
+        return ResponseEntity.ok(rolesService.updateRole(id, role));
     }
 
-    //Get all roles
-    @GetMapping("/getAllRoleDetails")
-    public List<Roles> getAllRolesDetails() {
-        return rolesService.getAllRoles();
-    }
-
-    //Add role
-    @PostMapping("/addRoleDetails")
-    public Roles addRoleDetails(@RequestBody Roles roles) {
-        return rolesService.createRoles(roles);
-    }
-
-    //update role
-    @PutMapping("/updateRoleDetails")
-    public String updateRoleDetails(@RequestBody Roles roles) {
-        return rolesService.updateRoles(roles);
-    }
-
-    //delete role
-    @DeleteMapping("/deleteRole/{user_id}")
-    public String deleteRoleDetails(@PathVariable(value = "user_id") Long user_id) {
-        return rolesService.deleteRoles(user_id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
+        rolesService.deleteRole(id);
+        return ResponseEntity.noContent().build();
     }
 }

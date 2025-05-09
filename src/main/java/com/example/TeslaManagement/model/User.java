@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -40,5 +42,19 @@ public class User implements Serializable {
 
     @Column(name="username", unique = true, nullable = false)
     private String username;
+
+    // Add relationship with UserRole - one user can have one userRole
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private UserRole userRole;
+
+    // Add a method to get roles (needed by CustomUserDetails)
+    public List<UserRole> getRoles() {
+        // Since we have a one-to-one relationship, return as a list with one element
+        if (userRole != null) {
+            return Collections.singletonList(userRole);
+        }
+        return Collections.emptyList();
+    }
 
 }

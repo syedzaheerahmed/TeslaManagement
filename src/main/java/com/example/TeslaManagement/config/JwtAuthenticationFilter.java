@@ -1,70 +1,53 @@
 package com.example.TeslaManagement.config;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.SignatureException;
+import com.example.TeslaManagement.Utils.UserLoadImpl;
+import com.example.TeslaManagement.service.impl.JwtService;
+import com.example.TeslaManagement.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Value("${jwt.header.string}")
-    public String HEADER_STRING;
-
-    @Value("${jwt.token.prefix}")
-    public String TOKEN_PREFIX;
-
-    @Resource(name = "userService")
-    private UserDetailsService userDetailsService;
 
     @Autowired
-    private TokenProvider jwtTokenUtil;
+    private JwtService jwtService;
+
+    @Autowired
+    UserLoadImpl userLoadImpl;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String header = req.getHeader(HEADER_STRING);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
         String username = null;
-        String authToken = null;
-
-        if (header != null && header.startsWith(TOKEN_PREFIX)) {
-            authToken = header.replace(TOKEN_PREFIX, "");
-
-            try {
-                username = jwtTokenUtil.getUsernameFromToken(authToken);
-            } catch (IllegalArgumentException e) {
-                logger.error("Error occurred while retrieving Username from Token", e);
-            } catch (ExpiredJwtException e) {
-                logger.warn("The token has expired", e);
-            } catch (SignatureException e) {
-                logger.error("Authentication Failed. Invalid username or password.");
-            }
-        } else {
-            logger.warn("Bearer string not found, ignoring the header");
+        if(authHeader != null && authHeader.startsWith("Bearer ")){
+            token = authHeader.substring(7);
+            username = jwtService.extractUsername(token);
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication = jwtTokenUtil.getAuthenticationToken(authToken, SecurityContextHolder.getContext().getAuthentication(), userDetails);
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-                logger.info("User authenticated: " + username + ", setting security context");
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            UserDetails userDetails = userLoadImpl.loadUserByUsername(username);
+            if(jwtService.validateToken(token, userDetails)){
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
+
         }
 
-        chain.doFilter(req, res);
+        filterChain.doFilter(request, response);
     }
 }

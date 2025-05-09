@@ -1,11 +1,11 @@
 package com.example.TeslaManagement.service.impl;
 
-import com.example.TeslaManagement.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -45,19 +45,15 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, User user) {
+    public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(user.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
-
 
     public String GenerateToken(String username){
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
     }
-
-
 
     private String createToken(Map<String, Object> claims, String username) {
 
@@ -65,7 +61,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*1))
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*10))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
