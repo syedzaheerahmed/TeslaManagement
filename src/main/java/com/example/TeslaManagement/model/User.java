@@ -3,6 +3,7 @@ package com.example.TeslaManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,7 +48,7 @@ public class User{
 
     // Add relationship with UserRole - one user can have one userRole
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonManagedReference
     private UserRole userRole;
 
     // Add a method to get roles (needed by CustomUserDetails)

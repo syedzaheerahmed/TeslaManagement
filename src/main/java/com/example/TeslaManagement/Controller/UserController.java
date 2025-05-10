@@ -3,10 +3,7 @@ package com.example.TeslaManagement.Controller;
 import com.example.TeslaManagement.CustomException.AccountDisabledException;
 import com.example.TeslaManagement.CustomException.InvalidCredentialsException;
 import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
-import com.example.TeslaManagement.DTO.AdminCreateUserRequestDTO;
-import com.example.TeslaManagement.DTO.AuthRequestDTO;
-import com.example.TeslaManagement.DTO.JwtResponseDTO;
-import com.example.TeslaManagement.DTO.RefreshTokenRequestDTO;
+import com.example.TeslaManagement.DTO.*;
 import com.example.TeslaManagement.model.*;
 import com.example.TeslaManagement.service.UserService;
 import com.example.TeslaManagement.service.impl.JwtService;
@@ -78,8 +75,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 

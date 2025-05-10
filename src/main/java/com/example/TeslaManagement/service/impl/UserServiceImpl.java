@@ -1,6 +1,7 @@
 package com.example.TeslaManagement.service.impl;
 
 import com.example.TeslaManagement.DTO.AdminCreateUserRequestDTO;
+import com.example.TeslaManagement.DTO.UserDTO;
 import com.example.TeslaManagement.Utils.PasswordGenerator;
 import com.example.TeslaManagement.model.Branch;
 import com.example.TeslaManagement.model.Roles;
@@ -20,6 +21,7 @@ import com.example.TeslaManagement.repository.UserRepo;
 import java.time.Year;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserService {
@@ -110,9 +112,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("UserDetail "+id));
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        return userRepo.findAll();
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepo.findAll();
+        return users.stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
     }
 
 
