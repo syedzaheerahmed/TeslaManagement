@@ -1,5 +1,7 @@
 package com.example.TeslaManagement.service.impl;
 
+import com.example.TeslaManagement.CustomException.InvalidTokenException;
+import com.example.TeslaManagement.CustomException.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,11 +22,23 @@ public class JwtService {
     public static final String SECRET = "357638792F423F4428472B4B6250655368566D597133743677397A2443264629";
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        try {
+            return extractClaim(token, Claims::getSubject);
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            throw new TokenExpiredException("JWT token has expired");
+        } catch (io.jsonwebtoken.JwtException e) {
+            throw new InvalidTokenException("Invalid JWT token");
+        }
     }
 
     public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        try {
+            return extractClaim(token, Claims::getExpiration);
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            throw new TokenExpiredException("JWT token has expired");
+        } catch (io.jsonwebtoken.JwtException e) {
+            throw new InvalidTokenException("Invalid JWT token");
+        }
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -33,12 +47,18 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            throw new TokenExpiredException("JWT token has expired");
+        } catch (io.jsonwebtoken.JwtException e) {
+            throw new InvalidTokenException("Invalid JWT token");
+        }
     }
 
     private Boolean isTokenExpired(String token) {
@@ -46,8 +66,12 @@ public class JwtService {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        try {
+            final String username = extractUsername(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        } catch (TokenExpiredException e) {
+            throw e;
+        }
     }
 
     public String GenerateToken(String username){
@@ -61,7 +85,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*10))
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*50))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 

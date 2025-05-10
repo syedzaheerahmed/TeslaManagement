@@ -1,10 +1,19 @@
 package com.example.TeslaManagement.Controller;
 
+import com.example.TeslaManagement.CustomException.AccountDisabledException;
+import com.example.TeslaManagement.CustomException.InvalidCredentialsException;
+import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
 import com.example.TeslaManagement.DTO.AdminCreateUserRequestDTO;
+import com.example.TeslaManagement.DTO.AuthRequestDTO;
+import com.example.TeslaManagement.DTO.JwtResponseDTO;
+import com.example.TeslaManagement.DTO.RefreshTokenRequestDTO;
 import com.example.TeslaManagement.model.*;
 import com.example.TeslaManagement.service.UserService;
 import com.example.TeslaManagement.service.impl.JwtService;
 import com.example.TeslaManagement.service.impl.RefreshTokenService;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +21,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -58,7 +70,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('Super Admin')")
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
@@ -82,31 +94,52 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public JwtResponseDTO AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword()));
-        if(authentication.isAuthenticated()){
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
-            return JwtResponseDTO.builder()
-                    .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
-                    .token(refreshToken.getToken()).build();
+    public JwtResponseDTO AuthenticateAndGetToken(@Valid @RequestBody AuthRequestDTO authRequestDTO){
+        logger.debug("Login attempt for username: {}", authRequestDTO.getUsername());
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(),
+                    authRequestDTO.getPassword()));
+            if (authentication.isAuthenticated()) {
+                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                if (!userDetails.isEnabled()) {
+                    throw new AccountDisabledException("User account is disabled");
+                }
+                RefreshToken refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
+                logger.info("Login successful for username: {}", authRequestDTO.getUsername());
+                return JwtResponseDTO.builder()
+                        .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
+                        .token(refreshToken.getToken()).build();
 
-        } else {
-            throw new UsernameNotFoundException("invalid user request..!!");
+            } else {
+                throw new InvalidCredentialsException("invalid user request..!!");
+            }
+        }
+        catch (AuthenticationException e) {
+            logger.warn("Authentication failed for username: {}", authRequestDTO.getUsername());
+            throw new InvalidCredentialsException("Invalid username or password");
         }
 
     }
 
     @PostMapping("/refreshToken")
-    public JwtResponseDTO refreshToken(@RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO){
+    public JwtResponseDTO refreshToken(@Valid @RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO){
+        logger.debug("Refresh token request with token: {}", refreshTokenRequestDTO.getToken());
         return refreshTokenService.findByToken(refreshTokenRequestDTO.getToken())
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
-                .map(userInfo -> {
-                    String accessToken = jwtService.GenerateToken(userInfo.getUsername());
+                .map(user -> {
+                    String accessToken = jwtService.GenerateToken(user.getUsername());
+                    logger.info("New access token generated for username: {}", user.getUsername());
                     return JwtResponseDTO.builder()
                             .accessToken(accessToken)
-                            .token(refreshTokenRequestDTO.getToken()).build();
-                }).orElseThrow(() ->new RuntimeException("Refresh Token is not in DB..!!"));
+                            .token(refreshTokenRequestDTO.getToken())
+                            .build();
+                })
+                .orElseThrow(() -> {
+                    logger.warn("Refresh token not found: {}", refreshTokenRequestDTO.getToken());
+                    return new ResourceNotFoundException("Refresh token not found in database");
+                });
     }
 
 }

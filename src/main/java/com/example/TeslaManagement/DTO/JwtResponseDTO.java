@@ -1,4 +1,4 @@
-package com.example.TeslaManagement.model;
+package com.example.TeslaManagement.DTO;
 
 import lombok.*;
 

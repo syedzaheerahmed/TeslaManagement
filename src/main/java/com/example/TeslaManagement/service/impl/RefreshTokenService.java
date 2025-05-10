@@ -1,10 +1,15 @@
 package com.example.TeslaManagement.service.impl;
 
+import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
+import com.example.TeslaManagement.CustomException.TokenExpiredException;
 import com.example.TeslaManagement.model.RefreshToken;
+import com.example.TeslaManagement.model.User;
 import com.example.TeslaManagement.repository.RefreshTokenRepo;
 import com.example.TeslaManagement.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -14,19 +19,27 @@ import java.util.UUID;
 @Service
 public class RefreshTokenService {
 
+    private static final Logger logger = LoggerFactory.getLogger(RefreshTokenService.class);
+
     @Autowired
     RefreshTokenRepo refreshTokenRepo;
 
     @Autowired
     UserRepo userRepository;
 
-    public RefreshToken createRefreshToken(String username){
+    public RefreshToken createRefreshToken(String username) {
+        logger.debug("Creating refresh token for username: {}", username);
+        User user = userRepository.findByUsername(username).
+                orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
+
         RefreshToken refreshToken = RefreshToken.builder()
-                .user(userRepository.findByUsername(username))
+                .user(user)
                 .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(600000))
+                .expiryDate(Instant.now().plusMillis(600000)) // 10 minutes
                 .build();
-        return refreshTokenRepo.save(refreshToken);
+        RefreshToken savedToken = refreshTokenRepo.save(refreshToken);
+        logger.info("Refresh token created for username: {}", username);
+        return savedToken;
     }
 
 
@@ -35,13 +48,13 @@ public class RefreshTokenService {
         return refreshTokenRepo.findByToken(token);
     }
 
-    public RefreshToken verifyExpiration(RefreshToken token){
-        if(token.getExpiryDate().compareTo(Instant.now())<0){
+    public RefreshToken verifyExpiration(RefreshToken token) {
+        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepo.delete(token);
-            throw new RuntimeException(token.getToken() + " Refresh token is expired. Please make a new login..!");
+            logger.warn("Refresh token expired: {}", token.getToken());
+            throw new TokenExpiredException("Refresh token has expired. Please log in again.");
         }
         return token;
-
     }
 
 }
