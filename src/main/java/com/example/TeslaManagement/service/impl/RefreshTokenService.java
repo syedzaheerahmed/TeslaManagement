@@ -7,6 +7,7 @@ import com.example.TeslaManagement.model.User;
 import com.example.TeslaManagement.repository.RefreshTokenRepo;
 import com.example.TeslaManagement.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,9 @@ public class RefreshTokenService {
     @Autowired
     UserRepo userRepository;
 
+    @Value("${refresh-token.expiry}")
+    private long refreshTokenExpiry;
+
     public RefreshToken createRefreshToken(String username) {
         logger.debug("Creating refresh token for username: {}", username);
         User user = userRepository.findByUsername(username).
@@ -35,7 +39,7 @@ public class RefreshTokenService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
                 .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(600000)) // 10 minutes
+                .expiryDate(Instant.now().plusMillis(refreshTokenExpiry)) // 10 minutes
                 .build();
         RefreshToken savedToken = refreshTokenRepo.save(refreshToken);
         logger.info("Refresh token created for username: {}", username);
