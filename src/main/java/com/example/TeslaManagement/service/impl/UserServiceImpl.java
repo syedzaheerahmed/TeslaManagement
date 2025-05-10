@@ -21,6 +21,7 @@ import com.example.TeslaManagement.repository.UserRepo;
 import java.time.Year;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service(value = "userService")
@@ -107,9 +108,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("UserDetail "+id));
+    public UserDTO getUserById(Long id) {
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
+        return new UserDTO(user);
     }
 
     public List<UserDTO> getAllUsers() {

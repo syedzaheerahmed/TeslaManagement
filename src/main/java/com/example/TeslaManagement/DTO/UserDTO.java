@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +25,10 @@ public class UserDTO {
         this.isActive = user.isActive();
         this.createdAt = user.getCreatedAt();
         this.modifiedAt = user.getModifiedAt();
-        this.roles = user.getRoles().stream()
+        this.roles = user.getRoles() != null
+                ? user.getRoles().stream()
                 .map(userRole -> userRole.getRole().getRoleName())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+                : Collections.emptyList();
     }
 }

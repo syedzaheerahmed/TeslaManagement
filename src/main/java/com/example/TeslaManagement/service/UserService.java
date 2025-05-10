@@ -10,7 +10,7 @@ public interface UserService {
     User createUser(User userDetail);
     User updateUser(Long id, User userDetail);
     void deleteUser(Long id);
-    User getUserById(Long id);
+    UserDTO getUserById(Long id);
     List<UserDTO> getAllUsers();
     boolean resetPassword(String username, String password);
     User createUserByAdmin(AdminCreateUserRequestDTO request);

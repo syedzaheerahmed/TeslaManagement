@@ -9,6 +9,7 @@ import com.example.TeslaManagement.service.UserService;
 import com.example.TeslaManagement.service.impl.JwtService;
 import com.example.TeslaManagement.service.impl.RefreshTokenService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +70,9 @@ public class UserController {
 
     @PreAuthorize("hasRole('Super Admin')")
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable @Positive(message = "User ID must be positive") Long id) {
+        logger.debug("Fetching user with ID: {}", id);
+        UserDTO user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
