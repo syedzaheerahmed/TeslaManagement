@@ -1,7 +1,6 @@
 package com.example.TeslaManagement.Utils;
 
 import com.example.TeslaManagement.model.User;
-import com.example.TeslaManagement.model.UserRole;
 import com.example.TeslaManagement.repository.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UserLoadImpl implements UserDetailsService {
@@ -20,6 +20,7 @@ public class UserLoadImpl implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(UserLoadImpl.class);
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.debug("Entering in loadUserByUsername Method...");
         User user = userRepository.findByUsernameWithRole(username);

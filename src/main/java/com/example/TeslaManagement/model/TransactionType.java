@@ -13,16 +13,14 @@ import java.io.Serializable;
  * 
  */
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name="transaction_types")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class TransactionType implements Serializable {
-	@Serial
-	private static final long serialVersionUID = 1L;
-
+public class TransactionType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="type_id", nullable = false)

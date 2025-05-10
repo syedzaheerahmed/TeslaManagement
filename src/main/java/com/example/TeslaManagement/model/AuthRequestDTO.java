@@ -2,9 +2,10 @@ package com.example.TeslaManagement.model;
 
 import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class AuthRequestDTO {
     private String username;

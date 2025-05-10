@@ -19,15 +19,12 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "transactions")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Transaction implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id")
@@ -52,7 +49,7 @@ public class Transaction implements Serializable {
     private LocalDateTime createdAt;
 
     @Column(name = "is_invalid", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean isInvalid;
+    private boolean isInvalid;
 
     // Many-to-One relationship with PaymentMode
     @NotNull(message = "Payment mode cannot be null")
@@ -97,6 +94,6 @@ public class Transaction implements Serializable {
     private User transactionMadeBy;
 
     @Column(name = "is_deleted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
 }

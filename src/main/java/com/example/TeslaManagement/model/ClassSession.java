@@ -29,12 +29,11 @@ import java.util.Date;
 		}
 )
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClassSession implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class ClassSession {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

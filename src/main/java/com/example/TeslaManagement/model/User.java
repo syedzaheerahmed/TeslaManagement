@@ -16,10 +16,12 @@ import java.util.List;
 @Entity
 @Table(name="users")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable {
+@ToString(exclude = {"userRole"})
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
@@ -30,7 +32,7 @@ public class User implements Serializable {
     private LocalDateTime createdAt;
 
     @Column(name="is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isActive;
+    private boolean isActive= true;
 
     @UpdateTimestamp
     @Column(name="modified_at", nullable = false)
@@ -44,17 +46,13 @@ public class User implements Serializable {
     private String username;
 
     // Add relationship with UserRole - one user can have one userRole
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private UserRole userRole;
 
     // Add a method to get roles (needed by CustomUserDetails)
     public List<UserRole> getRoles() {
-        // Since we have a one-to-one relationship, return as a list with one element
-        if (userRole != null) {
-            return Collections.singletonList(userRole);
-        }
-        return Collections.emptyList();
+        return userRole != null ? Collections.singletonList(userRole) : Collections.emptyList();
     }
 
 }

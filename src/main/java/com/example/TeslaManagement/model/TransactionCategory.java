@@ -18,13 +18,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name="transaction_categories")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionCategory implements Serializable {
-	@Serial
-	private static final long serialVersionUID = 1L;
-
+public class TransactionCategory{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="category_id")

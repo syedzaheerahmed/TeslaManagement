@@ -21,13 +21,11 @@ import java.time.LocalDateTime;
         }
 )
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentAttendance implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class StudentAttendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -24,14 +24,12 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "allocation_requests")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AllocationRequest implements Serializable {
-
-	@Serial
-	private static final long serialVersionUID = 1L;
+public class AllocationRequest  {
 
 	/**
 	 * Enumeration for request types

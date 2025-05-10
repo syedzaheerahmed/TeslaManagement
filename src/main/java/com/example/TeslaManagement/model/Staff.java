@@ -13,12 +13,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "staff")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Staff implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Staff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +34,10 @@ public class Staff implements Serializable {
     private String contactNumber;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isActive;
+    private boolean isActive;
 
     @Column(name = "is_teaching_staff", nullable = false)
-    private Boolean isTeachingStaff;
+    private boolean isTeachingStaff;
 
     @Column(name = "reason_for_deactivation")
     private String reasonForDeactivation;
@@ -52,7 +51,7 @@ public class Staff implements Serializable {
     private User user; //Links to users table for login access
 
     @Column(name = "is_salary_paid", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean isSalaryPaid;
+    private boolean isSalaryPaid;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -12,12 +12,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "classes")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Class implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Class{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="class_id")

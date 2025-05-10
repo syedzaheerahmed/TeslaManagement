@@ -15,16 +15,14 @@ import org.hibernate.annotations.UpdateTimestamp;
  * The persistent class for the payment_modes database table.
  * 
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name="payment_modes")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class PaymentMode implements Serializable {
-	@Serial
-	private static final long serialVersionUID = 1L;
-
+public class PaymentMode  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="mode_id", nullable = false)

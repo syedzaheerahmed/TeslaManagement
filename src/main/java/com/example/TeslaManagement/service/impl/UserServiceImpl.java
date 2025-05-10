@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User userDetail) { // This is for self-signup
         userDetail.setPassword(passwordEncoder.encode(userDetail.getPassword()));
-        userDetail.setIsActive(true); // Good practice to set explicitly
+        userDetail.setActive(true);
         User savedUser = userRepo.save(userDetail);
 
         // Assign a default role, e.g., "USER"
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
         User newUser = new User();
         newUser.setUsername(request.username());
         newUser.setPassword(passwordEncoder.encode(request.password()));
-        newUser.setIsActive(true);
+        newUser.setActive(true);
         User savedUser = userRepo.save(newUser);
 
         Roles roleToAssign = rolesRepo.findByRoleName(request.roleName())

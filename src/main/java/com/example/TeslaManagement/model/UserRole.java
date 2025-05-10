@@ -26,11 +26,12 @@ import java.time.LocalDateTime;
 		}
 )
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRole implements Serializable {
-	private static final long serialVersionUID = 1L;
+@ToString(exclude = {"user", "role", "branch"})
+public class UserRole {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +42,7 @@ public class UserRole implements Serializable {
 	@JoinColumn(name = "branch_id", nullable = true)
 	private Branch branch; // NULL for Super Admin, required for branch-specific roles
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "role_id", nullable = false)
 	private Roles role;
 

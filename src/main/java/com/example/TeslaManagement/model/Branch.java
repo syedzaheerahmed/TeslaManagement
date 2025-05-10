@@ -12,11 +12,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name="branches")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Branch implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class Branch {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

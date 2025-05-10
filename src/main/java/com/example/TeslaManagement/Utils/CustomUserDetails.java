@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CustomUserDetails extends User implements UserDetails {
+public class CustomUserDetails implements UserDetails {
 
     private String username;
     private String password;
@@ -20,7 +20,7 @@ public class CustomUserDetails extends User implements UserDetails {
     public CustomUserDetails(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
-        this.isActive = user.getIsActive() != null ? user.getIsActive() : true;
+        this.isActive = user.isActive();
         List<GrantedAuthority> auths = new ArrayList<>();
 
         String roleName = user.getUserRole().getRole().getRoleName();

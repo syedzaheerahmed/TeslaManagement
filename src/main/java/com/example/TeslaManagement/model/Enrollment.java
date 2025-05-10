@@ -27,12 +27,11 @@ import java.util.Date;
 		}
 )
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Enrollment implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class Enrollment  {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "roles")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Roles {
