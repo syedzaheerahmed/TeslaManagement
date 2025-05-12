@@ -4,8 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-db/password.txt
-jwt/secret.txt
+secrets/db_password.txt
+secrets/jwt_secret.txt
 
 ### STS ###
 .apt_generated

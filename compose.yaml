@@ -1,51 +1,81 @@
 services:
-  server:
+  app:
     build:
       context: .
+      dockerfile: Dockerfile
+    container_name: tesla-management-app
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_URL=jdbc:postgresql://db:5432/tesla_management_v2
+      - DB_USERNAME=postgres
     secrets:
       - db-password
       - jwt-secret
-    environment:
-      - DB_URL=jdbc:postgresql://db:5432/tesla_management_v2
-      - DB_USERNAME=postgres
+    networks:
+      - tesla-network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
-    entrypoint: ["/bin/sh", "-c", "export DB_PASSWORD=$(cat /run/secrets/db-password) && java -Dspring.profiles.active=postgres org.springframework.boot.loader.launch.JarLauncher"]
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
   db:
-    image: postgres:15
-    restart: always
-    user: postgres
-    secrets:
-      - db-password
+    image: postgres:15-alpine
+    container_name: tesla-management-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=tesla_management_v2
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     volumes:
       - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=tesla_management
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    secrets:
+      - db-password
     expose:
-      - 5432
+      - "5432"
+    networks:
+      - tesla-network
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tesla_management_v2"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
     deploy:
       resources:
         limits:
           cpus: '1'
           memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+networks:
+  tesla-network:
+    driver: bridge
+
 volumes:
   db-data:
+    driver: local
+
 secrets:
   db-password:
-    file: db/password.txt
+    file: ./secrets/db_password.txt
   jwt-secret:
-    file: jwt/secret.txt
+    file: ./secrets/jwt_secret.txt
