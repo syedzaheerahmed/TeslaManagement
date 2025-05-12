@@ -13,6 +13,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
     boolean existsByUsernameAndPassword(String username,String password);
     Optional<User> findByUsername(String username);
 
+    boolean existsByUsername(String username);
+
     @Query("SELECT u FROM User u " +
             "JOIN FETCH u.userRole ur " +
             "JOIN FETCH ur.role r " +

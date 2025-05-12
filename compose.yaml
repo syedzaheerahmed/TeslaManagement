@@ -11,7 +11,7 @@ services:
       - db-password
       - jwt-secret
     environment:
-      - DB_URL=jdbc:postgresql://db:5432/tesla_management
+      - DB_URL=jdbc:postgresql://db:5432/tesla_management_v2
       - DB_USERNAME=postgres
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
