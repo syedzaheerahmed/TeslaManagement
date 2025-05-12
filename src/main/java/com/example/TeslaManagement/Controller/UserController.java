@@ -5,6 +5,7 @@ import com.example.TeslaManagement.CustomException.InvalidCredentialsException;
 import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
 import com.example.TeslaManagement.DTO.*;
 import com.example.TeslaManagement.model.*;
+import com.example.TeslaManagement.repository.UserRepo;
 import com.example.TeslaManagement.service.UserService;
 import com.example.TeslaManagement.service.impl.JwtService;
 import com.example.TeslaManagement.service.impl.RefreshTokenService;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -42,8 +44,11 @@ public class UserController {
     @Autowired
     RefreshTokenService refreshTokenService;
 
+    @Autowired
+    private UserRepo userRepo;
+
     @PostMapping("/signup")
-    public ResponseEntity<User> createUser(@RequestBody User userDetail) {
+    public ResponseEntity<User> createUser(@RequestBody AdminCreateUserRequestDTO userDetail) {
         User createdUser = userService.createUser(userDetail);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
@@ -54,12 +59,6 @@ public class UserController {
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    @PostMapping("/admin/create-user") // New endpoint
-    @PreAuthorize("hasAnyRole('Admin', 'Super Admin')")
-    public ResponseEntity<User> adminCreateUser(@RequestBody AdminCreateUserRequestDTO request) {
-        User createdUser = userService.createUserByAdmin(request); // New service method
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-    }
 
     @PreAuthorize("hasRole('Super Admin')")
     @DeleteMapping("/{id}")
@@ -90,6 +89,30 @@ public class UserController {
         } catch (Exception e){
             throw new RuntimeException(e);
         }
+    }
+
+    @PostMapping("/super-admin-action")
+    @PreAuthorize("hasRole('Super Admin')")
+    public ResponseEntity<String> superAdminAction() {
+        User currentUser = getCurrentUser();
+        logger.info("Super Admin action performed by: {}", currentUser.getUsername());
+        return new ResponseEntity<>("Super Admin action executed successfully.", HttpStatus.OK);
+    }
+
+    // Existing endpoint with broader access
+    @PostMapping("/admin-create")
+    @PreAuthorize("hasAnyRole('Super Admin', 'Admin')")
+    public ResponseEntity<User> adminCreateUser(@Valid @RequestBody AdminCreateUserRequestDTO request) {
+        User requestor = getCurrentUser();
+        User createdUser = userService.adminCreateUser(request, requestor);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepo.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found."));
     }
 
     @PostMapping("/login")

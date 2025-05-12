@@ -139,4 +139,30 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponseDTO> handleUnauthorized(UnauthorizedException ex) {
+        logger.warn("Unauthorized action: {}", ex.getMessage());
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.FORBIDDEN.value(),
+                "UNAUTHORIZED",
+                ex.getMessage(),
+                "You do not have permission to perform this action.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidInput(InvalidInputException ex) {
+        logger.warn("Invalid input: {}", ex.getMessage());
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                "INVALID_INPUT",
+                ex.getMessage(),
+                "Please provide valid input data.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }
