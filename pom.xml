@@ -11,6 +11,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>TeslaManagement</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>TeslaManagement</name>
 	<description>Rest Service for Tesla Management</description>
 	<properties>
@@ -91,6 +92,11 @@
             <artifactId>spring-security-core</artifactId>
             <version>6.4.4</version>
         </dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.3.0</version>
+		</dependency>
     </dependencies>
 
 	<build>

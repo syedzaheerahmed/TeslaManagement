@@ -39,7 +39,7 @@ public class RefreshTokenService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
                 .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(refreshTokenExpiry)) // 10 minutes
+                .expiryDate(Instant.now().plusMillis(refreshTokenExpiry)) // 8hrs minutes
                 .build();
         RefreshToken savedToken = refreshTokenRepo.save(refreshToken);
         logger.info("Refresh token created for username: {}", username);
