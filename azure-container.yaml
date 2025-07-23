@@ -1,0 +1,37 @@
+apiVersion: '2021-03-01'
+location: eastus
+name: tesla-backend
+properties:
+  containers:
+    - name: tesla-app
+      properties:
+        image: narendrannr/tesla-backend:latest
+        resources:
+          requests:
+            cpus: 1
+            memoryInGb: 1.5
+        ports:
+          - port: 8080
+            protocol: TCP
+        environmentVariables:
+          - name: POSTGRES_DB
+            value: tesla_management_v2
+          - name: POSTGRES_USER
+            value: postgres
+          - name: DB_PASSWORD
+            secureValue: 2456
+          - name: JWT_SECRET
+            secureValue: 357638792F423F4428472B4B6250655368566D597133743677397A2443264629
+  osType: Linux
+  restartPolicy: OnFailure
+  ipAddress:
+    type: Public
+    ports:
+      - protocol: TCP
+        port: 8080
+    dnsNameLabel: tesla-backend-api
+tags: {}
+type: Microsoft.ContainerInstance/containerGroups
+  
+  
+  az container create --resource-group tesla-rg --name tesla-backend --image narendrannr/tesla-backend:latest --cpu 1 --memory 1.5 --restart-policy OnFailure --environment-variables DB_PASSWORD=2456 JWT_SECRET=357638792F423F4428472B4B6250655368566D597133743677397A2443264629 --ports 8080 --dns-name-label tesla-backend-api  --location eastus
