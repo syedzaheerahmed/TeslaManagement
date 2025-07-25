@@ -7,6 +7,7 @@ import com.example.TeslaManagement.DTO.StaffRequestDTO;
 import com.example.TeslaManagement.model.*;
 import com.example.TeslaManagement.repository.*;
 import com.example.TeslaManagement.service.StaffService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -76,6 +77,15 @@ public class StaffServiceImpl implements StaffService {
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
         return convertToDTO(staff);
     }
+
+    @Override
+    public List<StaffDTO> getStaffByBranchId(Long branchId){
+        boolean branchExists = branchRepo.existsById(branchId);
+        if(!branchExists) throw new EntityNotFoundException( "Branch Id doesn't exist "+branchId);
+        return staffRepo.findStaffByBranch(branchId).stream()
+                .map( this::convertToDTO).collect(Collectors.toList());
+    }
+
 
     @Override
     @PreAuthorize("hasAnyRole('Super Admin', 'Admin')")

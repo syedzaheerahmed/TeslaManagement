@@ -17,4 +17,7 @@ public interface StaffRepo extends JpaRepository<Staff, Long> {
 
     @Query("SELECT s FROM Staff s JOIN FETCH s.branch JOIN FETCH s.user")
     List<Staff> findAllWithDetails();
+
+    @Query("SELECT s FROM Staff s JOIN FETCH s.branch b WHERE b.branchId = :branchId")
+    List< Staff> findStaffByBranch( @Param("branchId") Long branchId);
 }

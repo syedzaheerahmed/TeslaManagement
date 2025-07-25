@@ -1,6 +1,7 @@
 package com.example.TeslaManagement.service.impl;
 
 import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
+import com.example.TeslaManagement.CustomException.ItemAlreadyExistsException;
 import com.example.TeslaManagement.DTO.BranchDTO;
 import com.example.TeslaManagement.DTO.BranchRequestDTO;
 import com.example.TeslaManagement.model.Branch;
@@ -40,6 +41,10 @@ public class BranchServiceImpl implements BranchService {
     public BranchDTO createBranch(BranchRequestDTO branchRequestDTO) {
         HQ hq = hqRepo.findById(branchRequestDTO.getHqId())
                 .orElseThrow(() -> new ResourceNotFoundException("HQ not found with id: " + branchRequestDTO.getHqId()));
+        List<Branch> isBranchExist = branchRepo.findByBranchName(branchRequestDTO.getBranchName());
+        if(!isBranchExist.isEmpty()){
+            throw new ItemAlreadyExistsException("Branch '" + branchRequestDTO.getBranchName() + "' already exists.");
+        }
         Branch branch = new Branch();
         branch.setBranchAddress(branchRequestDTO.getBranchAddress());
         branch.setBranchName(branchRequestDTO.getBranchName());

@@ -36,6 +36,21 @@ public class StudentController {
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
 
+    @GetMapping("/branch/{id}")
+    public ResponseEntity<?> getStudentByBranchId(@PathVariable("id") Long branchId) {
+        try {
+            List<StudentDTO> students = studentService.getStudentByBranchId(branchId);
+            if (students.isEmpty()) {
+                return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(" No Students found for the given branch ID: " + branchId);
+            }
+
+            return  ResponseEntity.ok(students);
+        }
+        catch( Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<StudentDTO> updateStudent(
             @PathVariable("id") Long studentId,

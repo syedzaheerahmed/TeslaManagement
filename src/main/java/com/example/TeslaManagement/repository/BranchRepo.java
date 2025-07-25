@@ -17,4 +17,7 @@ public interface BranchRepo extends JpaRepository<Branch, Long> {
 
     @Query("SELECT b FROM Branch b JOIN FETCH b.hq")
     List<Branch> findAllWithHq();
+
+    @Query("SELECT b FROM Branch b WHERE b.branchName = :branchName")
+    List<Branch> findByBranchName(@Param("branchName") String branchName);
 }

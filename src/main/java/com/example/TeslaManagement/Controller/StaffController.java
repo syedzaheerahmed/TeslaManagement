@@ -2,6 +2,7 @@ package com.example.TeslaManagement.Controller;
 
 import com.example.TeslaManagement.DTO.StaffDTO;
 import com.example.TeslaManagement.DTO.StaffRequestDTO;
+import com.example.TeslaManagement.DTO.StudentDTO;
 import com.example.TeslaManagement.service.StaffService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -38,6 +39,22 @@ public class StaffController {
         StaffDTO staff = staffService.getStaffById(id);
         return ResponseEntity.ok(staff);
     }
+
+    @GetMapping("/branch/{id}")
+    public ResponseEntity<?> getStaffByBranchId(@PathVariable("id") Long branchId) {
+        try {
+            List<StaffDTO> staffList = staffService.getStaffByBranchId(branchId);
+            if (staffList.isEmpty()) {
+                return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(" No Staff found for the given branch ID: " + branchId);
+            }
+
+            return  ResponseEntity.ok(staffList);
+        }
+        catch( Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('Super Admin', 'Admin')")

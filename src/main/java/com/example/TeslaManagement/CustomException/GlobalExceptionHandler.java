@@ -165,4 +165,17 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ItemAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDTO> handleItemAlreadyExists(ItemAlreadyExistsException ex) {
+        logger.warn("Already exist input: {}", ex.getMessage());
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.CONFLICT.value(),
+                "ALREADY_EXIST",
+                ex.getMessage(),
+                "Please provide new input data.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
 }

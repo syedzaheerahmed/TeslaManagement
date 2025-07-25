@@ -10,6 +10,7 @@ import com.example.TeslaManagement.repository.BranchRepo;
 import com.example.TeslaManagement.repository.StudentRepo;
 import com.example.TeslaManagement.repository.UserRepo;
 import com.example.TeslaManagement.service.StudentService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,6 +83,16 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
         return mapToDTO(student);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StudentDTO> getStudentByBranchId(Long branchId) {
+        boolean branchExists = branchRepository.existsById(branchId);
+        if(!branchExists) throw new EntityNotFoundException( "Branch Id doesn't exist "+branchId);
+        return studentRepository.findByBranch(branchId).stream()
+                .map( this::mapToDTO).collect(Collectors.toList());
+
     }
 
     @Transactional
