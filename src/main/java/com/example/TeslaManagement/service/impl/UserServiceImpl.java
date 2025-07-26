@@ -1,6 +1,7 @@
 package com.example.TeslaManagement.service.impl;
 
 import com.example.TeslaManagement.CustomException.InvalidInputException;
+import com.example.TeslaManagement.CustomException.ItemAlreadyExistsException;
 import com.example.TeslaManagement.CustomException.UnauthorizedException;
 import com.example.TeslaManagement.DTO.AdminCreateUserRequestDTO;
 import com.example.TeslaManagement.DTO.UserDTO;
@@ -24,6 +25,7 @@ import com.example.TeslaManagement.repository.UserRepo;
 import java.time.Year;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service(value = "userService")
@@ -52,6 +54,11 @@ public class UserServiceImpl implements UserService {
         Roles roleToAssign = rolesRepo.findById(request.getRoleId())
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found with ID: " + request.getRoleId()));
         String roleNameToAssign = roleToAssign.getRoleName();
+
+        Optional<User> isUserExit = userRepo.findByUsername(request.getUsername());
+        if(isUserExit.isPresent()){
+            throw new ItemAlreadyExistsException("User '" + request.getUsername() + "' already exists.");
+        }
 
         // Create the new user
         User newUser = new User();
@@ -99,6 +106,11 @@ public class UserServiceImpl implements UserService {
         // Validate branch_id if required
         if ("Faculty".equals(roleNameToAssign) && request.getBranchId() == null) {
             throw new InvalidInputException("Branch ID is required for Faculty users.");
+        }
+
+        Optional<User> isUserExit = userRepo.findByUsername(request.getUsername());
+        if(isUserExit.isPresent()){
+            throw new ItemAlreadyExistsException("User '" + request.getUsername() + "' already exists.");
         }
 
         // Create the new user

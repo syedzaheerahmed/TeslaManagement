@@ -13,4 +13,7 @@ import lombok.*;
 public class JwtResponseDTO {
     private String accessToken;
     private String token;
+    private Long user_id;
+    private Long user_role;
+    private boolean isActive;
 }

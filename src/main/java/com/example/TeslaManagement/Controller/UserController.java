@@ -131,7 +131,10 @@ public class UserController {
                 logger.info("Login successful for username: {}", authRequestDTO.getUsername());
                 return JwtResponseDTO.builder()
                         .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
-                        .token(refreshToken.getToken()).build();
+                        .token(refreshToken.getToken())
+                        .user_id(refreshToken.getUser().getUserId())
+                        .user_role(refreshToken.getUser().getUserRole().getRole().getRoleId())
+                        .isActive(refreshToken.getUser().isActive()).build();
 
             } else {
                 throw new InvalidCredentialsException("invalid user request..!!");
