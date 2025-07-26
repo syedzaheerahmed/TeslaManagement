@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,14 @@ public class BranchController {
         return ResponseEntity.ok(branch);
     }
 
+    @GetMapping("/user/{userid}")
+    public ResponseEntity<BranchDTO> getBranchByUserId(@PathVariable("userid") Long userid) {
+        BranchDTO branch = branchService.getBranchByUserId(userid);
+        return ResponseEntity.ok(branch);
+    }
+
     @PostMapping
+    @PreAuthorize("hasAnyRole('Super Admin')")
     public ResponseEntity<BranchDTO> createBranch(@Valid @RequestBody BranchRequestDTO branchRequestDTO) {
         BranchDTO createdBranch = branchService.createBranch(branchRequestDTO);
         return new ResponseEntity<>(createdBranch, HttpStatus.CREATED);

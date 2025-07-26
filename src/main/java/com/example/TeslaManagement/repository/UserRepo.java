@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.List;
 import java.util.Optional;
 
 @RepositoryRestResource
@@ -18,4 +19,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
             "JOIN FETCH ur.role r " +
             "WHERE u.username = :username")
     User findByUsernameWithRole(@Param("username") String username);
+
+    @Query("SELECT u.username FROM User u WHERE u.username LIKE :pattern ORDER BY u.username")
+    List<String> findUsernamesByPattern(@Param("pattern") String pattern);
 }

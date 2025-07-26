@@ -178,4 +178,21 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
+
+//    /**
+//     * Handle general exceptions
+//     */
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponseDTO> handleGeneralException(Exception ex) {
+//        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                "INTERNAL_SERVER_ERROR",
+//                "An unexpected error occurred",
+//                ex.getMessage(),
+//                LocalDateTime.now()
+//        );
+//
+//        logger.error("Unexpected error: ", ex);
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+//    }
 }

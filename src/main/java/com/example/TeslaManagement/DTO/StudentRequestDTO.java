@@ -15,9 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class StudentRequestDTO {
 
-    @NotNull(message = "User ID is mandatory")
-    private Long userId;
-
+    // Student personal details
     @NotBlank(message = "Student name is mandatory")
     private String studentName;
 
@@ -42,5 +40,8 @@ public class StudentRequestDTO {
     @NotNull(message = "Branch ID is mandatory")
     private Long branchId;
 
-    private boolean isFeesPaid;
+    private boolean isFeesPaid = false;
+
+    // Optional: If you want to allow custom username (otherwise auto-generated)
+    private String customUsername;
 }

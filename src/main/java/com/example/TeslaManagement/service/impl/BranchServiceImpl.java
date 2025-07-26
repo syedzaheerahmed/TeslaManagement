@@ -73,6 +73,13 @@ public class BranchServiceImpl implements BranchService {
         branchRepo.delete(branch);
     }
 
+    @Override
+    public  BranchDTO getBranchByUserId(Long id){
+        Branch branch = branchRepo.findBranchesByUserId(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Branch not found with user id: " + id));
+        return convertToDTO(branch);
+    }
+
     private BranchDTO convertToDTO(Branch branch) {
         BranchDTO dto = new BranchDTO();
         dto.setBranchId(branch.getBranchId());

@@ -4,6 +4,7 @@ import com.example.TeslaManagement.CustomException.AccountDisabledException;
 import com.example.TeslaManagement.CustomException.InvalidCredentialsException;
 import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
 import com.example.TeslaManagement.DTO.*;
+import com.example.TeslaManagement.Utils.UserIdGeneratorTest;
 import com.example.TeslaManagement.model.*;
 import com.example.TeslaManagement.repository.UserRepo;
 import com.example.TeslaManagement.service.UserService;
@@ -47,6 +48,9 @@ public class UserController {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private UserIdGeneratorTest userIdGeneratorTest;
+
     @PostMapping("/signup")
     public ResponseEntity<User> createUser(@RequestBody AdminCreateUserRequestDTO userDetail) {
         User createdUser = userService.createUser(userDetail);
@@ -85,6 +89,7 @@ public class UserController {
     @GetMapping("/test")
     public ResponseEntity<?> test() {
         try {
+            userIdGeneratorTest.demonstrateUsage();
             return ResponseEntity.ok().body("Success super admin");
         } catch (Exception e){
             throw new RuntimeException(e);
@@ -108,7 +113,7 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    private User getCurrentUser() {
+    public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         return userRepo.findByUsername(username)
