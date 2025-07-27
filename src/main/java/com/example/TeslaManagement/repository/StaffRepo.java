@@ -2,6 +2,7 @@ package com.example.TeslaManagement.repository;
 
 
 import com.example.TeslaManagement.model.Staff;
+import com.example.TeslaManagement.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +21,9 @@ public interface StaffRepo extends JpaRepository<Staff, Long> {
 
     @Query("SELECT s FROM Staff s JOIN FETCH s.branch b WHERE b.branchId = :branchId")
     List< Staff> findStaffByBranch( @Param("branchId") Long branchId);
+
+    /**
+     * Find Staffs by branch ID and active status
+     */
+    List<Staff> findByBranchBranchIdAndIsActiveTrue(Long branchId);
 }

@@ -73,7 +73,7 @@ public class StudentServiceImpl implements StudentService {
             User newUser = createUserEntity(generatedUsername, studentRole, branch, requestor);
 
             // 6. Create Student entity
-            Student newStudent = createStudentEntity(studentRequestDTO, branch, newUser);
+            Student newStudent = createStudentEntity(studentRequestDTO, branch, requestor);
 
             // 7. Return response with temporary password
             StudentResponseDTO response = mapToResponseDTO(newStudent, generatedUsername);
@@ -147,7 +147,7 @@ public class StudentServiceImpl implements StudentService {
     public List<StudentDTO> getStudentByBranchId(Long branchId) {
         boolean branchExists = branchRepository.existsById(branchId);
         if(!branchExists) throw new EntityNotFoundException( "Branch Id doesn't exist "+branchId);
-        return studentRepository.findByBranch(branchId).stream()
+        return studentRepository.findByBranchBranchIdAndIsActiveTrue(branchId).stream()
                 .map( this::mapToDTO).collect(Collectors.toList());
 
     }
@@ -184,7 +184,8 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudent(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
-        studentRepository.delete(student);
+        student.setActive(false);
+        studentRepository.save(student);
     }
 
     /**

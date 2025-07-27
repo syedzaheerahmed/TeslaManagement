@@ -82,7 +82,7 @@ public class StaffServiceImpl implements StaffService {
     public List<StaffDTO> getStaffByBranchId(Long branchId){
         boolean branchExists = branchRepo.existsById(branchId);
         if(!branchExists) throw new EntityNotFoundException( "Branch Id doesn't exist "+branchId);
-        return staffRepo.findStaffByBranch(branchId).stream()
+        return staffRepo.findByBranchBranchIdAndIsActiveTrue(branchId).stream()
                 .map( this::convertToDTO).collect(Collectors.toList());
     }
 
@@ -128,7 +128,8 @@ public class StaffServiceImpl implements StaffService {
     public void deleteStaff(Long id) {
         Staff staff = staffRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
-        staffRepo.delete(staff);
+        staff.setActive(false);
+        staffRepo.save(staff);
     }
 
     private StaffDTO convertToDTO(Staff staff) {
