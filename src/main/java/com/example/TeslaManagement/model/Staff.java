@@ -39,6 +39,13 @@ public class Staff {
     @Column(name = "is_teaching_staff", nullable = false)
     private boolean isTeachingStaff;
 
+    @Column(name = "is_admin", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean isAdmin = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by", referencedColumnName = "user_id")
+    private User createdBy;  //ref users.user_id
+
     @Column(name = "reason_for_deactivation")
     private String reasonForDeactivation;
 

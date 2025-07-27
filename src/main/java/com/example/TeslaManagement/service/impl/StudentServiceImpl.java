@@ -6,6 +6,7 @@ import com.example.TeslaManagement.CustomException.UnauthorizedException;
 import com.example.TeslaManagement.DTO.StudentDTO;
 import com.example.TeslaManagement.DTO.StudentRequestDTO;
 import com.example.TeslaManagement.DTO.StudentResponseDTO;
+import com.example.TeslaManagement.Utils.StudentUtilityService;
 import com.example.TeslaManagement.Utils.UserIdGeneratorUtils;
 import com.example.TeslaManagement.model.*;
 import com.example.TeslaManagement.repository.*;
@@ -48,6 +49,9 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private StudentUtilityService studentUtilityService;
+
     private static final Long STUDENT_ROLE_ID = 5L;
 
     @Override
@@ -57,10 +61,10 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             // 1. Validate requestor permissions
-            validateRequestorPermissions(requestor);
+            studentUtilityService.validateRequestorPermissions(requestor);
 
             // 2. Validate branch exists and requestor has access
-            Branch branch = validateAndGetBranch(studentRequestDTO.getBranchId(), requestor);
+            Branch branch = studentUtilityService.validateAndGetBranch(studentRequestDTO.getBranchId(), requestor);
 
             // 3. Validate student role exists
             Roles studentRole = rolesRepository.findById(STUDENT_ROLE_ID)
@@ -70,7 +74,7 @@ public class StudentServiceImpl implements StudentService {
             String generatedUsername = generateUsername(studentRequestDTO, branch);
 
             // 5. Create User entity
-            User newUser = createUserEntity(generatedUsername, studentRole, branch, requestor);
+            User newUser = studentUtilityService.createUserEntity(generatedUsername, studentRole, branch, requestor);
 
             // 6. Create Student entity
             Student newStudent = createStudentEntity(studentRequestDTO, branch, requestor);
@@ -188,39 +192,7 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.save(student);
     }
 
-    /**
-     * Validate requestor has permission to create students
-     */
-    private void validateRequestorPermissions(User requestor) {
-        if (requestor.getUserRole() == null || requestor.getUserRole().getRole() == null) {
-            throw new UnauthorizedException("User role not found");
-        }
 
-        String requestorRole = requestor.getUserRole().getRole().getRoleName();
-        if (!"Super Admin".equals(requestorRole) && !"Admin".equals(requestorRole)) {
-            throw new UnauthorizedException("Only Super Admins and Admins can create students");
-        }
-    }
-
-    /**
-     * Validate branch and check requestor access
-     */
-    private Branch validateAndGetBranch(Long branchId, User requestor) {
-        Branch branch = branchRepository.findById(branchId)
-                .orElseThrow(() -> new ResourceNotFoundException("Branch not found with ID: " + branchId));
-
-        // Additional validation: if requestor is Admin, check if they have access to this branch
-        String requestorRole = requestor.getUserRole().getRole().getRoleName();
-        if ("Admin".equals(requestorRole)) {
-            Long requestorBranchId = requestor.getUserRole().getBranch() != null ?
-                    requestor.getUserRole().getBranch().getBranchId() : null;
-            if (requestorBranchId != null && !requestorBranchId.equals(branchId)) {
-                throw new UnauthorizedException("Admin can only create students in their assigned branch");
-            }
-        }
-
-        return branch;
-    }
 
     /**
      * Generate username using custom logic or UserIdGenerator
@@ -236,37 +208,6 @@ public class StudentServiceImpl implements StudentService {
             // Generate dynamic username using utility
             return userIdGenerator.generateUserId(STUDENT_ROLE_ID, branch.getBranchId());
         }
-    }
-
-    /**
-     * Create User entity with generated username as password
-     */
-    private User createUserEntity(String username, Roles studentRole, Branch branch, User requestor) {
-        // Check if username already exists (double-check for safety)
-        if (userRepository.findByUsername(username).isPresent()) {
-            throw new InvalidInputException("Generated username already exists: " + username);
-        }
-
-        // Create user with username as temporary password
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(passwordEncoder.encode(username)); // Use username as temporary password
-        newUser.setActive(true);
-
-        // Save user first
-        User savedUser = userRepository.save(newUser);
-        logger.info("User created with username: {}", username);
-
-        // Create user role assignment
-        UserRole userRole = new UserRole();
-        userRole.setUser(savedUser);
-        userRole.setRole(studentRole);
-        userRole.setBranch(branch);
-        userRoleRepository.save(userRole);
-
-        logger.info("User role assigned: Student role to user {}", username);
-
-        return savedUser;
     }
 
     /**

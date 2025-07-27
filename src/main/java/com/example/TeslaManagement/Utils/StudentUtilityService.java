@@ -1,8 +1,18 @@
 package com.example.TeslaManagement.Utils;
 
-import com.example.TeslaManagement.model.Student;
+import com.example.TeslaManagement.CustomException.InvalidInputException;
+import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
+import com.example.TeslaManagement.CustomException.UnauthorizedException;
+import com.example.TeslaManagement.model.*;
+import com.example.TeslaManagement.repository.BranchRepo;
 import com.example.TeslaManagement.repository.StudentRepo;
+import com.example.TeslaManagement.repository.UserRepo;
+import com.example.TeslaManagement.repository.UserRoleRepo;
+import com.example.TeslaManagement.service.impl.StudentServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,8 +25,23 @@ import java.util.Map;
 @Service
 public class StudentUtilityService {
 
+    private static final Logger logger = LoggerFactory.getLogger(StudentUtilityService.class);
+
     @Autowired
     private StudentRepo studentRepository;
+
+    @Autowired
+    private BranchRepo branchRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRoleRepo userRoleRepository;
+
+    @Autowired
+    private UserRepo userRepository;
+
 
     /**
      * Get student statistics by branch
@@ -127,4 +152,166 @@ public class StudentUtilityService {
         String currentYear = String.valueOf(java.time.LocalDate.now().getYear()).substring(2);
         return currentYear + "TS" + branchId + "XX"; // XX will be replaced with actual serial
     }
+
+    /**
+     * Validate branch and check requestor access
+     */
+    public Branch validateAndGetBranch(Long branchId, User requestor) {
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new ResourceNotFoundException("Branch not found with ID: " + branchId));
+
+        // Additional validation: if requestor is Admin, check if they have access to this branch
+        String requestorRole = requestor.getUserRole().getRole().getRoleName();
+        if ("Admin".equals(requestorRole)) {
+            Long requestorBranchId = requestor.getUserRole().getBranch() != null ?
+                    requestor.getUserRole().getBranch().getBranchId() : null;
+            if (requestorBranchId != null && !requestorBranchId.equals(branchId)) {
+                throw new UnauthorizedException("Admin can only create Staff/students in their assigned branch");
+            }
+        }
+
+        return branch;
+    }
+
+    /**
+     * Validate requestor has permission to create students
+     */
+    public void validateRequestorPermissions(User requestor) {
+        if (requestor.getUserRole() == null || requestor.getUserRole().getRole() == null) {
+            throw new UnauthorizedException("User role not found");
+        }
+
+        String requestorRole = requestor.getUserRole().getRole().getRoleName();
+        if (!"Super Admin".equals(requestorRole) && !"Admin".equals(requestorRole)) {
+            throw new UnauthorizedException("Only Super Admins and Admins can create students");
+        }
+    }
+
+
+    /**
+     * Create User entity with generated username as password
+     */
+    public User createUserEntity(String username, Roles studentRole, Branch branch, User requestor) {
+        // Check if username already exists (double-check for safety)
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new InvalidInputException("Generated username already exists: " + username);
+        }
+
+        // Create user with username as temporary password
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(passwordEncoder.encode(username)); // Use username as temporary password
+        newUser.setActive(true);
+
+        // Save user first
+        User savedUser = userRepository.save(newUser);
+        logger.info("User created with username: {}", username);
+
+        // Create user role assignment
+        UserRole userRole = new UserRole();
+        userRole.setUser(savedUser);
+        userRole.setRole(studentRole);
+        userRole.setBranch(branch);
+        userRoleRepository.save(userRole);
+
+        logger.info("User role assigned: Student role to user {}", username);
+
+        return savedUser;
+    }
+
+
+//    /**
+//     * Check if contact number is already in use
+//     */
+//    private void validateContactNumber(String contactNumber) {
+//        if (StringUtils.isNotBlank(contactNumber)) {
+//            Optional<Staff> existingStaff = staffRepo.findByContactNumberAndIsActiveTrue(contactNumber);
+//            if (existingStaff.isPresent()) {
+//                throw new IllegalArgumentException("Contact number already exists: " + contactNumber);
+//            }
+//        }
+//    }
+
+//    /**
+//     * Validate manually provided credentials
+//     */
+//    private void validateProvidedCredentials(String username, String password) {
+//        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+//            throw new IllegalArgumentException("Username and password are required when auto-generation is disabled");
+//        }
+//
+//        // Username validation
+//        if (username.length() < 3 || username.length() > 50) {
+//            throw new IllegalArgumentException("Username must be between 3 and 50 characters");
+//        }
+//
+//        // Password validation (reuse from utility service)
+//        if (!userUtilityService.isPasswordValid(password)) {
+//            throw new IllegalArgumentException("Password does not meet security requirements");
+//        }
+//    }
+//
+//    /**
+//     * Get staff with full details including user account
+//     */
+//    public StaffWithUserResponseDTO getStaffWithUserDetails(Long staffId) {
+//        Optional<Staff> staffOpt = staffRepo.findByIdWithUserDetails(staffId);
+//        if (staffOpt.isEmpty()) {
+//            throw new EntityNotFoundException("Staff not found with ID: " + staffId);
+//        }
+//
+//        Staff staff = staffOpt.get();
+//        return buildStaffWithUserResponse(staff, staff.getUser(), null); // Don't include password in get operations
+//    }
+//
+//    /**
+//     * Update staff admin status (only by Super Admin)
+//     */
+//    @Transactional
+//    public StaffWithUserResponseDTO updateStaffAdminStatus(Long staffId, boolean isAdmin) {
+//        // Validate permissions
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+//        String currentRole = getCurrentUserRole(currentUser);
+//
+//        if (!"Super Admin".equals(currentRole)) {
+//            throw new AccessDeniedException("Only Super Admin can modify admin status");
+//        }
+//
+//        // Get staff
+//        Optional<Staff> staffOpt = staffRepo.findByIdWithUserDetails(staffId);
+//        if (staffOpt.isEmpty()) {
+//            throw new EntityNotFoundException("Staff not found with ID: " + staffId);
+//        }
+//
+//        Staff staff = staffOpt.get();
+//
+//        // Update admin status
+//        staff.setIsAdmin(isAdmin);
+//
+//        // Update user role if user account exists
+//        if (staff.getUser() != null) {
+//            updateUserRoleForAdminStatus(staff.getUser(), isAdmin, staff.getBranch());
+//        }
+//
+//        Staff updatedStaff = staffRepo.save(staff);
+//        return buildStaffWithUserResponse(updatedStaff, updatedStaff.getUser(), null);
+//    }
+//
+//    /**
+//     * Update user role based on admin status change
+//     */
+//    private void updateUserRoleForAdminStatus(User user, boolean isAdmin, Branch branch) {
+//        String newRoleName = isAdmin ? "Admin" : "Faculty";
+//        Roles newRole = rolesService.findByRoleName(newRoleName);
+//
+//        if (newRole == null) {
+//            throw new EntityNotFoundException("Role not found: " + newRoleName);
+//        }
+//
+//        UserRole userRole = user.getUserRole();
+//        if (userRole != null) {
+//            userRole.setRole(newRole);
+//            userService.saveUserRole(userRole);
+//        }
 }

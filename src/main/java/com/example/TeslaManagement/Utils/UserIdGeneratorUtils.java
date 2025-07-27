@@ -68,6 +68,8 @@ public class UserIdGeneratorUtils {
      * @param roleId The role ID from database
      * @param branchId The branch ID (null for Super Admin)
      * @return Generated unique user ID
+     *
+     * TODO: Find a way to prevent the null pointer error resolution for roleId
      */
     @Transactional
     public String generateUserId(Long roleId, Long branchId) {
