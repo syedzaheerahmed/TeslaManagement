@@ -14,13 +14,14 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-@Entity
-@Table(name="users")
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name="users")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @ToString(exclude = {"userRole"})
 public class User{
     @Id

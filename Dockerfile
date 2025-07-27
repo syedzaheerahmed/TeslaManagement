@@ -1,36 +1,58 @@
 # syntax=docker/dockerfile:1
 
-# Stage 1: Cache Maven Dependencies
-FROM maven:3.8.5-eclipse-temurin-17 AS deps
+# ===================================================================
+# STAGE 1: Build the Application using Maven
+# This stage uses a full JDK and Maven image to build the JAR file.
+# ===================================================================
+FROM maven:3.9-eclipse-temurin-17 AS builder
 WORKDIR /build
+
+# Copy the pom.xml and download dependencies first to leverage Docker layer caching
 COPY pom.xml .
-RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline -DskipTests
+RUN mvn dependency:go-offline
 
-# Stage 2: Build the Application
-FROM deps AS package
-COPY src src/
-RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests && \
-    mv target/TeslaManagement-*.jar target/app.jar
+# Copy the source code and build the application
+COPY src ./src
+# Use -DskipTests to speed up the build process in the pipeline
+RUN mvn clean package -DskipTests
 
-# Stage 3: Extract JAR Layers
-FROM package AS extract
-WORKDIR /build
-RUN java -Djarmode=layertools -jar target/app.jar extract --destination target/extracted
 
-# Stage 4: Create Runtime Image
-FROM eclipse-temurin:17-jre-jammy AS final
+# ===================================================================
+# STAGE 2: Create the Final, Optimized Runtime Image
+# This stage starts from a minimal JRE-only image for security and size.
+# ===================================================================
+FROM eclipse-temurin:17-jre-jammy
+
+# Create a non-root user for security
 ARG UID=10001
-RUN groupadd -r appuser && \
-    useradd -r -g appuser -u ${UID} -s /sbin/nologin appuser
+RUN addgroup --system --gid ${UID} appgroup && \
+    adduser --system --uid ${UID} --ingroup appgroup --shell /bin/sh appuser
+
+# Set the working directory
 WORKDIR /app
-COPY --from=extract --chown=appuser:appuser /build/target/extracted/dependencies/ ./
-COPY --from=extract --chown=appuser:appuser /build/target/extracted/spring-boot-loader/ ./
-COPY --from=extract --chown=appuser:appuser /build/target/extracted/snapshot-dependencies/ ./
-COPY --from=extract --chown=appuser:appuser /build/target/extracted/application/ ./
-RUN mkdir -p /tmp && chown appuser:appuser /tmp
+
+# Copy the JAR file from the builder stage
+# We are copying the single fat JAR, which is simpler than layertools
+# for many GCP deployments and works perfectly with our setup.
+COPY --from=builder /build/target/TeslaManagement-*.jar app.jar
+
+# Set ownership to the non-root user
+RUN chown appuser:appgroup app.jar
+
+# Switch to the non-root user
 USER appuser
+
+# Set the active Spring profile to 'prod'
+# This ensures our production configuration is always used for this image.
+ENV SPRING_PROFILES_ACTIVE=prod
+
+# Set default JVM options for running in a container
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+
+# Expose the port the application runs on
 EXPOSE 8080
-ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC"
-HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8080/actuator/health || exit 1
-ENTRYPOINT ["sh", "-c", "export DB_PASSWORD=$(cat /run/secrets/db-password) && export JWT_SECRET=$(cat /run/secrets/jwt-secret) && java $JAVA_OPTS org.springframework.boot.loader.launch.JarLauncher"]
+
+# The simplified entrypoint.
+# We use 'exec' form to ensure signals are handled correctly.
+# The JAVA_OPTS and Spring profile are automatically used.
+ENTRYPOINT ["java", "-jar", "app.jar"]
