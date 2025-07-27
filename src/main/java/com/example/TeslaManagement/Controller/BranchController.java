@@ -32,8 +32,8 @@ public class BranchController {
     }
 
     @GetMapping("/user/{userid}")
-    public ResponseEntity<BranchDTO> getBranchByUserId(@PathVariable("userid") Long userid) {
-        BranchDTO branch = branchService.getBranchByUserId(userid);
+    public ResponseEntity<List<BranchDTO>> getBranchByUserId(@PathVariable("userid") Long userid) {
+        List<BranchDTO> branch = branchService.getBranchByUserId(userid);
         return ResponseEntity.ok(branch);
     }
 

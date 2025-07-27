@@ -11,5 +11,5 @@ public interface BranchService {
     BranchDTO createBranch(BranchRequestDTO branchRequestDTO);
     BranchDTO updateBranch(Long id, BranchRequestDTO branchRequestDTO);
     void deleteBranch(Long id);
-    BranchDTO getBranchByUserId(Long id);
+    List<BranchDTO> getBranchByUserId(Long id);
 }

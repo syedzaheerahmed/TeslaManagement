@@ -74,10 +74,12 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public  BranchDTO getBranchByUserId(Long id){
-        Branch branch = branchRepo.findBranchesByUserId(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Branch not found with user id: " + id));
-        return convertToDTO(branch);
+    public  List<BranchDTO> getBranchByUserId(Long id){
+        List<Branch>  branch = branchRepo.findBranchesByUserId(id);
+        if(branch.isEmpty()){
+            throw new ResourceNotFoundException("Branch not found with user id: " + id);
+        }
+        return branch.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     private BranchDTO convertToDTO(Branch branch) {
