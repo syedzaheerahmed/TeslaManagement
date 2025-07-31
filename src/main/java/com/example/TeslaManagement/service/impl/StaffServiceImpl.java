@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -93,10 +94,10 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public StaffDTO getStaffById(Long id) {
+    public List<StaffDTO> getStaffById(Long id) {
         Staff staff = staffRepo.findByIdWithDetails(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff not found with id: " + id));
-        return convertToDTO(staff);
+        return Collections.singletonList(convertToDTO(staff));
     }
 
     @Override
@@ -170,7 +171,7 @@ public class StaffServiceImpl implements StaffService {
             User newUser = studentUtilityService.createUserEntity(generatedUsername, staffRole, branch, requestor);
 
             // 6. Create Staff entity
-            Staff newStaff = createStaffEntity(staffRequestDTO, branch, requestor);
+            Staff newStaff = createStaffEntity(staffRequestDTO, branch, requestor, newUser);
 
             // 7. Return response with temporary password
             StaffWithUserResponseDTO response = convertStaffCreateToDTO(newStaff, generatedUsername, newUser);
@@ -202,17 +203,18 @@ public class StaffServiceImpl implements StaffService {
         }
     }
 
-    private Staff createStaffEntity(StaffRequestDTO request, Branch branch, User user) {
+    private Staff createStaffEntity(StaffRequestDTO request, Branch branch, User createdBy, User newUser) {
         Staff staff = new Staff();
         staff.setStaffName(request.getStaffName());
         staff.setAddress(request.getAddress());
         staff.setContactNumber(request.getContactNumber());
         staff.setTeachingStaff(request.isTeachingStaff());
         staff.setAdmin(Boolean.TRUE.equals(request.getIsAdmin()));
-        staff.setCreatedBy(user);
+        staff.setCreatedBy(createdBy);
         staff.setBranch(branch);
         staff.setActive(true);
         staff.setSalaryPaid(false);
+        staff.setUser(newUser);
 
         Staff savedStaff = staffRepo.save(staff);
         logger.info("Staff/Admin created with ID: {}", savedStaff.getStaffId());

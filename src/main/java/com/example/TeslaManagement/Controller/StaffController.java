@@ -88,8 +88,8 @@ public class StaffController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StaffDTO> getStaffById(@PathVariable @Positive(message = "Staff ID must be positive") Long id) {
-        StaffDTO staff = staffService.getStaffById(id);
+    public ResponseEntity<List<StaffDTO>> getStaffById(@PathVariable @Positive(message = "Staff ID must be positive") Long id) {
+        List<StaffDTO> staff = staffService.getStaffById(id);
         return ResponseEntity.ok(staff);
     }
 

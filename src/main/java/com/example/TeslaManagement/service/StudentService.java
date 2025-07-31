@@ -11,7 +11,7 @@ public interface StudentService {
     @Deprecated
     StudentDTO createStudent(StudentRequestDTO studentRequestDTO, User requestor);
     List<StudentDTO> getAllStudents();
-    StudentDTO getStudentById(Long studentId);
+    List<StudentDTO> getStudentById(Long studentId);
     StudentDTO updateStudent(Long studentId, StudentRequestDTO studentRequestDTO);
     void deleteStudent(Long studentId);
     List<StudentDTO> getStudentByBranchId(Long branchId);

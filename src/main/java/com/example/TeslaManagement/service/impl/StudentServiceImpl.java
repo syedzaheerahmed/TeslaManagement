@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -140,10 +141,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDTO getStudentById(Long studentId) {
+    public List<StudentDTO> getStudentById(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
-        return mapToDTO(student);
+        return Collections.singletonList(mapToDTO(student));
     }
 
     @Override

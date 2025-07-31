@@ -10,7 +10,7 @@ import java.util.List;
 public interface StaffService {
     StaffDTO createStaff(StaffRequestDTO staffRequestDTO);
     List<StaffDTO> getAllStaff();
-    StaffDTO getStaffById(Long id);
+    List<StaffDTO> getStaffById(Long id);
     StaffDTO updateStaff(Long id, StaffRequestDTO staffRequestDTO);
     void deleteStaff(Long id);
     List<StaffDTO> getStaffByBranchId(Long branchId);
