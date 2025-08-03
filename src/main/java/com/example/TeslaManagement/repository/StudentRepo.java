@@ -14,43 +14,43 @@ import java.util.Optional;
 @RepositoryRestResource
 public interface StudentRepo extends JpaRepository<Student,Long> {
 
-    @Query("SELECT s FROM Student s JOIN FETCH s.branch b WHERE b.branchId = :branchId")
-    List<Student> findByBranch(@Param("branchId") Long branchId);
+//    @Query("SELECT s FROM Student s JOIN FETCH s.branch b WHERE b.branchId = :branchId")
+//    List<Student> findByBranch(@Param("branchId") Long branchId);
 
     /**
      * Find students by branch ID and active status
      */
     List<Student> findByBranchBranchIdAndIsActiveTrue(Long branchId);
 
-    /**
-     * Find all students by branch ID
-     */
-    List<Student> findByBranchBranchId(Long branchId);
+//    /**
+//     * Find all students by branch ID
+//     */
+//    List<Student> findByBranchBranchId(Long branchId);
 
-    /**
-     * Find students by branch ID with pagination
-     */
-    Page<Student> findByBranchBranchId(Long branchId, Pageable pageable);
+//    /**
+//     * Find students by branch ID with pagination
+//     */
+//    Page<Student> findByBranchBranchId(Long branchId, Pageable pageable);
 
-    /**
-     * Find active students by branch ID with pagination
-     */
-    Page<Student> findByBranchBranchIdAndIsActiveTrue(Long branchId, Pageable pageable);
+//    /**
+//     * Find active students by branch ID with pagination
+//     */
+//    Page<Student> findByBranchBranchIdAndIsActiveTrue(Long branchId, Pageable pageable);
 
     /**
      * Find approved students by branch ID
      */
     List<Student> findByBranchBranchIdAndIsApprovedTrue(Long branchId);
 
-    /**
-     * Find student by user ID (created_by)
-     */
-    Optional<Student> findByCreatedByUserId(Long userId);
+//    /**
+//     * Find student by user ID (created_by)
+//     */
+//    Optional<Student> findByCreatedByUserId(Long userId);
 
-    /**
-     * Check if student exists with given user ID
-     */
-    boolean existsByCreatedByUserId(Long userId);
+//    /**
+//     * Check if student exists with given user ID
+//     */
+//    boolean existsByCreatedByUserId(Long userId);
 
     /**
      * Find students by name containing (case insensitive search)
@@ -58,10 +58,10 @@ public interface StudentRepo extends JpaRepository<Student,Long> {
     @Query("SELECT s FROM Student s WHERE LOWER(s.studentName) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<Student> findByStudentNameContainingIgnoreCase(@Param("name") String name);
 
-    /**
-     * Find students by parent contact
-     */
-    List<Student> findByParentContact(String parentContact);
+//    /**
+//     * Find students by parent contact
+//     */
+//    List<Student> findByParentContact(String parentContact);
 
     /**
      * Count active students by branch
