@@ -77,8 +77,11 @@ public class StudentServiceImpl implements StudentService {
             // 5. Create User entity
             User newUser = studentUtilityService.createUserEntity(generatedUsername, studentRole, branch, requestor);
 
+            Standard studentStandard = studentUtilityService.getStandardFromId(studentRequestDTO.getSchoolStd());
+            Board studentBoard = studentUtilityService.getBoardFromId(studentRequestDTO.getBoardOfSchool());
+
             // 6. Create Student entity
-            Student newStudent = createStudentEntity(studentRequestDTO, branch, requestor);
+            Student newStudent = createStudentEntity(studentRequestDTO, branch, requestor, newUser, studentStandard, studentBoard);
 
             // 7. Return response with temporary password
             StudentResponseDTO response = mapToResponseDTO(newStudent, generatedUsername);
@@ -110,6 +113,9 @@ public class StudentServiceImpl implements StudentService {
         Branch branch = branchRepository.findById(studentRequestDTO.getBranchId())
                 .orElseThrow(() -> new RuntimeException("Branch not found with ID: " + studentRequestDTO.getBranchId()));
 
+        Standard studentStandard = studentUtilityService.getStandardFromId(studentRequestDTO.getSchoolStd());
+        Board studentBoard = studentUtilityService.getBoardFromId(studentRequestDTO.getBoardOfSchool());
+
         // Create student entity
         Student student = new Student();
         student.setStudentName(studentRequestDTO.getStudentName());
@@ -119,11 +125,11 @@ public class StudentServiceImpl implements StudentService {
         student.setParentName(studentRequestDTO.getParentName());
         student.setParentContact(studentRequestDTO.getParentContact());
         student.setSchoolName(studentRequestDTO.getSchoolName());
-        student.setSchoolStd(studentRequestDTO.getSchoolStd());
-        student.setBoardOfSchool(studentRequestDTO.getBoardOfSchool());
+        student.setStandard(studentStandard);
+        student.setBoard(studentBoard);
         student.setBatchYear(studentRequestDTO.getBatchYear());
         student.setBranch(branch);
-        student.setCreatedBy(user); // Assuming the user creating the student is the same as the student user
+        student.setCreatedBy( requestor); // Assuming the user creating the student is the same as the student user
         student.setActive(true);
         student.setApproved(false);
         student.setFeesPaid(studentRequestDTO.isFeesPaid());
@@ -163,6 +169,9 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found with ID: " + studentId));
 
+        Standard studentStandard = studentUtilityService.getStandardFromId(studentRequestDTO.getSchoolStd());
+        Board studentBoard = studentUtilityService.getBoardFromId(studentRequestDTO.getBoardOfSchool());
+
         // Update fields
         student.setStudentName(studentRequestDTO.getStudentName());
         student.setDob(studentRequestDTO.getDob());
@@ -171,8 +180,8 @@ public class StudentServiceImpl implements StudentService {
         student.setParentName(studentRequestDTO.getParentName());
         student.setParentContact(studentRequestDTO.getParentContact());
         student.setSchoolName(studentRequestDTO.getSchoolName());
-        student.setSchoolStd(studentRequestDTO.getSchoolStd());
-        student.setBoardOfSchool(studentRequestDTO.getBoardOfSchool());
+        student.setStandard(studentStandard);
+        student.setBoard(studentBoard);
         student.setBatchYear(studentRequestDTO.getBatchYear());
         student.setFeesPaid(studentRequestDTO.isFeesPaid());
 
@@ -214,7 +223,7 @@ public class StudentServiceImpl implements StudentService {
     /**
      * Create Student entity
      */
-    private Student createStudentEntity(StudentRequestDTO request, Branch branch, User user) {
+    private Student createStudentEntity(StudentRequestDTO request, Branch branch, User createdByuser,  User user, Standard standard, Board board) {
         Student student = new Student();
         student.setStudentName(request.getStudentName());
         student.setDob(request.getDob());
@@ -223,11 +232,12 @@ public class StudentServiceImpl implements StudentService {
         student.setParentName(request.getParentName());
         student.setParentContact(request.getParentContact());
         student.setSchoolName(request.getSchoolName());
-        student.setSchoolStd(request.getSchoolStd());
-        student.setBoardOfSchool(request.getBoardOfSchool());
+        student.setStandard(standard);
+        student.setBoard(board);
         student.setBatchYear(request.getBatchYear());
         student.setBranch(branch);
-        student.setCreatedBy(user); // Set the newly created user as createdBy
+        student.setCreatedBy(createdByuser); // Set the newly created user as createdBy
+        student.setUserId(user);
         student.setActive(true);
         student.setApproved(false); // Default to not approved
         student.setFeesPaid(request.isFeesPaid());
@@ -253,8 +263,8 @@ public class StudentServiceImpl implements StudentService {
         dto.setParentName(student.getParentName());
         dto.setParentContact(student.getParentContact());
         dto.setSchoolName(student.getSchoolName());
-        dto.setSchoolStd(student.getSchoolStd());
-        dto.setBoardOfSchool(student.getBoardOfSchool());
+        dto.setSchoolStd(student.getStandard());
+        dto.setBoardOfSchool(student.getBoard());
         dto.setBatchYear(student.getBatchYear());
         dto.setActive(student.isActive());
         dto.setApproved(student.isApproved());
@@ -289,8 +299,8 @@ public class StudentServiceImpl implements StudentService {
         dto.setParentName(student.getParentName());
         dto.setParentContact(student.getParentContact());
         dto.setSchoolName(student.getSchoolName());
-        dto.setSchoolStd(student.getSchoolStd());
-        dto.setBoardOfSchool(student.getBoardOfSchool());
+        dto.setSchoolStd(student.getStandard());
+        dto.setBoardOfSchool(student.getBoard());
         dto.setBatchYear(student.getBatchYear());
         dto.setBranchId(student.getBranch().getBranchId());
         dto.setUserId(student.getCreatedBy().getUserId());

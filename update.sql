@@ -216,3 +216,8 @@ create table refresh_tokens (id serial not null, expiry_date timestamp(6) with t
 alter table if exists refresh_tokens drop constraint if exists UK_7tdcd6ab5wsgoudnvj7xf1b7l;
 alter table if exists refresh_tokens add constraint UK_7tdcd6ab5wsgoudnvj7xf1b7l unique (user_id);
 alter table if exists refresh_tokens add constraint FK1lih5y2npsf8u5o3vhdb9y0os foreign key (user_id) references users;
+alter table if exists classes add column is_active BOOLEAN DEFAULT TRUE not null;
+alter table if exists enrollments add column is_active BOOLEAN DEFAULT TRUE not null;
+alter table if exists student_attendance add column remarks varchar(255);
+alter table if exists student_attendance add column staff_id bigint not null;
+alter table if exists student_attendance add constraint FKcr7j22n9plxjsjr6g9ir50tp foreign key (staff_id) references staff;

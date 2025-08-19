@@ -43,6 +43,13 @@ public class StudentAttendance {
     @Column(name = "is_present", nullable = false)
     private Boolean isPresent;
 
+    @Column(name = "remarks ")
+    private String remarks;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "staff_id", referencedColumnName = "staff_id", nullable = false)
+    private Staff marked_by;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

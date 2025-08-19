@@ -1,5 +1,7 @@
 package com.example.TeslaManagement.DTO;
 
+import com.example.TeslaManagement.model.Board;
+import com.example.TeslaManagement.model.Standard;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,9 +32,9 @@ public class StudentDTO {
 
     private String schoolName;
 
-    private String schoolStd;
+    private Standard schoolStd;
 
-    private String boardOfSchool;
+    private Board boardOfSchool;
 
     private Integer batchYear;
 

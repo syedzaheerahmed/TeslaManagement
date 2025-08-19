@@ -3,59 +3,70 @@ info:
   title: "Tesla Management API"
   description: "API for the Tesla Management application"
   version: "1.0.0"
-
 schemes:
-  - "https"
+  - https
 produces:
-  - "application/json"
+  - application/json
+
+# Global backend configuration with authentication
+x-google-backend:
+  address: https://tesla-management-service-71286392534.us-central1.run.app
+  path_translation: APPEND_PATH_TO_ADDRESS
+  # This tells API Gateway to authenticate with Cloud Run using the service account
+  jwt_audience: https://tesla-management-service-71286392534.us-central1.run.app
 
 paths:
-  "/{proxy}":
-    parameters:
-      - name: "proxy"
-        in: "path"
-        required: true
-        type: "string"
-    get:
-      summary: "Proxy GET requests"
-      operationId: "proxyGet"
-      x-google-backend:
-        address: https://tesla-management-service-71286392534.us-central1.run.app
-      security:
-        - api_key: []
-      responses:
-        "200":
-          description: "A successful response"
+  # Specific login endpoint
+  /api/v1/users/login:
     post:
-      summary: "Proxy POST requests"
-      operationId: "proxyPost"
-      x-google-backend:
-        address: https://tesla-management-service-71286392534.us-central1.run.app
+      summary: "User login"
+      operationId: "userLogin"
       security:
         - api_key: []
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
       responses:
-        "200":
-          description: "A successful response"
-    put:
-      summary: "Proxy PUT requests"
-      operationId: "proxyPut"
+        '200':
+          description: "Login successful"
+        '401':
+          description: "Unauthorized"
+        '403':
+          description: "Forbidden"
       x-google-backend:
         address: https://tesla-management-service-71286392534.us-central1.run.app
+        path_translation: APPEND_PATH_TO_ADDRESS
+        jwt_audience: https://tesla-management-service-71286392534.us-central1.run.app
+
+  # Wildcard for all other paths
+  /{proxy+}:
+    x-google-any-method:
+      summary: "Proxy all requests to backend"
+      operationId: "proxyAll"
       security:
         - api_key: []
+      parameters:
+        - name: proxy
+          in: path
+          required: true
+          type: string
       responses:
-        "200":
-          description: "A successful response"
-    delete:
-      summary: "Proxy DELETE requests"
-      operationId: "proxyDelete"
+        '200':
+          description: "Success"
+        default:
+          description: "Response from backend"
       x-google-backend:
         address: https://tesla-management-service-71286392534.us-central1.run.app
-      security:
-        - api_key: []
-      responses:
-        "200":
-          description: "A successful response"
+        path_translation: APPEND_PATH_TO_ADDRESS
+        jwt_audience: https://tesla-management-service-71286392534.us-central1.run.app
 
 securityDefinitions:
   api_key:

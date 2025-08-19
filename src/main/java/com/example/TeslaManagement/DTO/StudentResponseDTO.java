@@ -3,6 +3,8 @@ package com.example.TeslaManagement.DTO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.TeslaManagement.model.Board;
+import com.example.TeslaManagement.model.Standard;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +25,8 @@ public class StudentResponseDTO {
     private String parentName;
     private String parentContact;
     private String schoolName;
-    private String schoolStd;
-    private String boardOfSchool;
+    private Standard schoolStd;
+    private Board boardOfSchool;
     private Integer batchYear;
     private boolean isActive;
     private boolean isApproved;

@@ -49,11 +49,13 @@ public class Student {
     @Column(name = "school_name")
     private String schoolName;
 
-    @Column(name = "school_std", length = 50)
-    private String schoolStd;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "standard_id", referencedColumnName = "id")
+    private Standard standard;   // references standards.id
 
-    @Column(name = "board_of_school")
-    private String boardOfSchool;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id", referencedColumnName = "id")
+    private Board board;         // references boards.id
 
     @Column(name = "batch_year")
     private Integer batchYear;
@@ -73,7 +75,11 @@ public class Student {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", referencedColumnName = "user_id")
-    private User createdBy;  //ref users.user_id
+    private User createdBy;  // ref users.user_id
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = true)
+    private User userId;  // ref users.user_id
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
@@ -85,5 +91,4 @@ public class Student {
 
     @Column(name = "is_fees_paid", nullable = false)
     private boolean isFeesPaid = false;
-
 }

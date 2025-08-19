@@ -4,10 +4,7 @@ import com.example.TeslaManagement.CustomException.InvalidInputException;
 import com.example.TeslaManagement.CustomException.ResourceNotFoundException;
 import com.example.TeslaManagement.CustomException.UnauthorizedException;
 import com.example.TeslaManagement.model.*;
-import com.example.TeslaManagement.repository.BranchRepo;
-import com.example.TeslaManagement.repository.StudentRepo;
-import com.example.TeslaManagement.repository.UserRepo;
-import com.example.TeslaManagement.repository.UserRoleRepo;
+import com.example.TeslaManagement.repository.*;
 import com.example.TeslaManagement.service.impl.StudentServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +38,12 @@ public class StudentUtilityService {
 
     @Autowired
     private UserRepo userRepository;
+
+    @Autowired
+    private StandardRepo standardRepository;
+
+    @Autowired
+    private BoardRepo boardRepository;
 
 
     /**
@@ -217,6 +220,22 @@ public class StudentUtilityService {
         logger.info("User role assigned: Student role to user {}", username);
 
         return savedUser;
+    }
+
+    public Standard getStandardFromId( Long standardId ){
+        if (standardId == null || standardId == 0) {
+            throw new InvalidInputException("Standard ID is empty or invalid: " + standardId);
+        }
+       return standardRepository.findById(standardId)
+                .orElseThrow(() -> new ResourceNotFoundException("Standard not found with ID: " + standardId));
+    }
+
+    public Board getBoardFromId( Long boardId ){
+        if (boardId == null || boardId == 0) {
+            throw new InvalidInputException("Standard ID is empty or invalid: " + boardId);
+        }
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new ResourceNotFoundException("Standard not found with ID: " + boardId));
     }
 
 

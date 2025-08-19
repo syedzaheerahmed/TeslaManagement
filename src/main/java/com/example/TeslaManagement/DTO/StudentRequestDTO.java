@@ -31,9 +31,9 @@ public class StudentRequestDTO {
 
     private String schoolName;
 
-    private String schoolStd;
+    private Long schoolStd;
 
-    private String boardOfSchool;
+    private Long boardOfSchool;
 
     private Integer batchYear;
 

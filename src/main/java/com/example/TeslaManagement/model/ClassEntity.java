@@ -6,27 +6,26 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "ClassEntity")
 @Table(name = "classes")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Class{
+public class ClassEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="class_id")
     private Long classId;
 
-    @Column(name="batch_name", nullable = false)
-    private String batchName;
+    @Column(name="class_name", nullable = false)
+    private String className;
 
-    @Column(name="batch_timings", nullable = false)
-    private String batchTimings;
+    @Column(name="class_timings", nullable = false)
+    private String classTimings;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id", referencedColumnName = "branch_id", nullable = false)
@@ -36,6 +35,9 @@ public class Class{
     @JoinColumn(name = "staff_id", referencedColumnName = "staff_id", nullable = false)
     private Staff staff;
 
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean isActive;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -43,4 +45,15 @@ public class Class{
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+//    @PrePersist
+//    protected void onCreate() {
+//        createdAt = LocalDateTime.now();
+//        updatedAt = LocalDateTime.now();
+//    }
+//
+//    @PreUpdate
+//    protected void onUpdate() {
+//        updatedAt = LocalDateTime.now();
+//    }
 }

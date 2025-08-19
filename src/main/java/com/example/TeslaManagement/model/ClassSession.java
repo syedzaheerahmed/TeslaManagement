@@ -3,7 +3,6 @@ package com.example.TeslaManagement.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 
-import java.io.Serializable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,7 +10,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 /**
@@ -42,7 +40,7 @@ public class ClassSession {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_id", referencedColumnName = "class_id", nullable = false)
-	private Class classEntity;
+	private ClassEntity classEntity;
 
 	@Column(name = "session_date", nullable = false)
 	private LocalDate sessionDate;

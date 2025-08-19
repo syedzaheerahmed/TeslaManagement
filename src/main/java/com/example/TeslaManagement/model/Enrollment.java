@@ -6,10 +6,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 
 /**
@@ -44,10 +42,13 @@ public class Enrollment  {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_id", referencedColumnName = "class_id", nullable = false)
-	private Class classEntity;
+	private ClassEntity classEntity;
 
 	@Column(name = "enrollment_date", nullable = false)
 	private LocalDate enrollmentDate;
+
+	@Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+	private boolean isActive;
 
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false)
